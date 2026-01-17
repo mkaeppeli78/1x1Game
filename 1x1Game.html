@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1x1 Verteidigung - Sprich die Antwort!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+```
+    body {
+        font-family: 'Segoe UI', 'Arial', sans-serif;
+        overflow: hidden;
+        background: linear-gradient(to bottom, #1e3c72 0%, #2a5298 50%, #7e22ce 100%);
+        height: 100vh;
+    }
+
+    #gameCanvas {
+        display: block;
+        background: linear-gradient(to bottom, #87CEEB 0%, #98D8E8 50%, #90EE90 100%);
+        cursor: crosshair;
+    }
+
+    #ui {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        padding: 15px 20px;
+        background: linear-gradient(to bottom, rgba(30, 60, 114, 0.95), rgba(42, 82, 152, 0.9));
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        z-index: 10;
+        border-bottom: 3px solid #FFD700;
+    }
+
+    .stat-group {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-width: 120px;
+    }
+
+    .stat {
+        font-size: 28px;
+        font-weight: bold;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    }
+
+    .stat-label {
+        font-size: 12px;
+        color: #ddd;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 5px;
+    }
+
+    #score { color: #FFD700; }
+    #highscore { color: #FFA500; }
+    #lives { color: #FF4444; }
+    #level { color: #4CAF50; }
+
+    #micButton {
+        position: absolute;
+        bottom: 30px;
+        right: 30px;
+        width: 90px;
+        height: 90px;
+        border-radius: 50%;
+        border: 4px solid #fff;
+        background: linear-gradient(145deg, #FF6B6B, #FF4444);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 45px;
+        box-shadow: 0 8px 25px rgba(255, 68, 68, 0.4);
+        transition: all 0.3s;
+        z-index: 10;
+    }
+
+    #micButton:hover:not(.disabled) {
+        transform: scale(1.1);
+        box-shadow: 0 12px 35px rgba(255, 68, 68, 0.6);
+    }
+
+    #micButton:active:not(.disabled) {
+        transform: scale(0.95);
+    }
+
+    #micButton.listening {
+        background: linear-gradient(145deg, #4CAF50, #45a049);
+        animation: pulse 1.5s infinite;
+    }
+
+    #micButton.disabled {
+        background: #666;
+        cursor: not-allowed;
+        opacity: 0.5;
+    }
+
+    @keyframes pulse {
+        0%, 100% { 
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4);
+            transform: scale(1);
+        }
+        50% { 
+            box-shadow: 0 12px 40px rgba(76, 175, 80, 0.8);
+            transform: scale(1.05);
+        }
+    }
+
+    #inputContainer {
+        position: absolute;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 12px;
+        z-index: 10;
+        background: linear-gradient(145deg, rgba(255, 255, 255, 0.98), rgba(240, 240, 240, 0.95));
+        padding: 20px 25px;
+        border-radius: 20px;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+        border: 3px solid #4CAF50;
+    }
+
+    #answerInput {
+        width: 180px;
+        padding: 18px;
+        font-size: 28px;
+        border: 3px solid #4CAF50;
+        border-radius: 12px;
+        text-align: center;
+        font-family: 'Segoe UI', sans-serif;
+        font-weight: bold;
+        transition: all 0.3s;
+    }
+
+    #answerInput:focus {
+        outline: none;
+        border-color: #45a049;
+        box-shadow: 0 0 15px rgba(76, 175, 80, 0.5);
+        transform: scale(1.05);
+    }
+
+    #submitButton {
+        padding: 18px 30px;
+        font-size: 34px;
+        background: linear-gradient(145deg, #4CAF50, #45a049);
+        border: none;
+        border-radius: 12px;
+        color: white;
+        cursor: pointer;
+        transition: all 0.3s;
+        box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
+    }
+
+    #submitButton:hover {
+        transform: scale(1.1);
+        box-shadow: 0 6px 20px rgba(76, 175, 80, 0.6);
+    }
+
+    #submitButton:active {
+        transform: scale(0.95);
+    }
+
+    #feedback {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 80px;
+        font-weight: bold;
+        opacity: 0;
+        pointer-events: none;
+        z-index: 100;
+        text-shadow: 4px 4px 8px rgba(0,0,0,0.5);
+    }
+
+    #feedback.correct {
+        color: #4CAF50;
+        animation: feedbackAnim 1.2s;
+    }
+
+    #feedback.wrong {
+        color: #FF4444;
+        animation: shakeAnim 0.6s;
+    }
+
+    @keyframes feedbackAnim {
+        0% { opacity: 0; transform: translate(-50%, -50%) scale(0.3) rotate(-10deg); }
+        50% { opacity: 1; transform: translate(-50%, -50%) scale(1.3) rotate(5deg); }
+        100% { opacity: 0; transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+    }
+
+    @keyframes shakeAnim {
+        0%, 100% { transform: translate(-50%, -50%); }
+        10%, 30%, 50%, 70%, 90% { transform: translate(-60%, -50%); }
+        20%, 40%, 60%, 80% { transform: translate(-40%, -50%); }
+    }
+
+    #startScreen, #gameOverScreen {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(30, 60, 114, 0.95), rgba(126, 34, 206, 0.95));
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        color: white;
+    }
+
+    .screen-panel {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 40px 50px;
+        border-radius: 25px;
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        max-width: 700px;
+    }
+
+    .screen-panel h1 {
+        font-size: 56px;
+        margin-bottom: 25px;
+        text-shadow: 4px 4px 8px rgba(0,0,0,0.5);
+        animation: titleFloat 3s ease-in-out infinite;
+    }
+
+    @keyframes titleFloat {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+    }
+
+    .screen-panel p {
+        font-size: 18px;
+        margin-bottom: 30px;
+        text-align: center;
+        line-height: 1.8;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    }
+
+    .button {
+        padding: 18px 45px;
+        font-size: 26px;
+        background: linear-gradient(145deg, #4CAF50, #45a049);
+        border: none;
+        border-radius: 15px;
+        color: white;
+        cursor: pointer;
+        box-shadow: 0 8px 20px rgba(76, 175, 80, 0.4);
+        transition: all 0.3s;
+        font-family: 'Segoe UI', sans-serif;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .button:hover {
+        transform: scale(1.1) translateY(-3px);
+        box-shadow: 0 12px 30px rgba(76, 175, 80, 0.6);
+    }
+
+    .button:active {
+        transform: scale(0.95);
+    }
+
+    #recognizedText {
+        position: absolute;
+        bottom: 150px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 22px;
+        color: #333;
+        background: rgba(255, 255, 255, 0.95);
+        padding: 12px 25px;
+        border-radius: 15px;
+        min-width: 250px;
+        text-align: center;
+        display: none;
+        z-index: 10;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        border: 2px solid #4CAF50;
+    }
+
+    #errorMessage {
+        position: absolute;
+        top: 100px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: linear-gradient(145deg, #FF6B6B, #FF4444);
+        color: white;
+        padding: 18px 35px;
+        border-radius: 15px;
+        font-size: 16px;
+        display: none;
+        z-index: 100;
+        max-width: 600px;
+        text-align: center;
+        box-shadow: 0 6px 20px rgba(255, 68, 68, 0.4);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .heart {
+        display: inline-block;
+        margin-left: 5px;
+        animation: heartBeat 1.5s ease-in-out infinite;
+    }
+
+    @keyframes heartBeat {
+        0%, 100% { transform: scale(1); }
+        10% { transform: scale(1.1); }
+        20% { transform: scale(1); }
+    }
+
+    .difficulty-selector {
+        display: flex;
+        gap: 15px;
+        margin: 20px 0;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .difficulty-btn {
+        padding: 12px 25px;
+        font-size: 18px;
+        border: 2px solid rgba(255, 255, 255, 0.5);
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .difficulty-btn:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: scale(1.05);
+    }
+
+    .difficulty-btn.active {
+        background: linear-gradient(145deg, #FFD700, #FFA500);
+        border-color: #FFD700;
+        color: #333;
+        font-weight: bold;
+    }
+
+    #micPermissionHelp {
+        margin-top: 15px;
+        font-size: 14px;
+        color: #FFD700;
+        font-style: italic;
+    }
+
+    .stats-row {
+        display: flex;
+        gap: 30px;
+        margin-bottom: 20px;
+        font-size: 20px;
+    }
+
+    .combo {
+        position: absolute;
+        top: 120px;
+        right: 30px;
+        font-size: 36px;
+        font-weight: bold;
+        color: #FFD700;
+        text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
+        opacity: 0;
+        transition: opacity 0.3s;
+        z-index: 10;
+    }
+
+    .combo.visible {
+        opacity: 1;
+    }
+</style>
+```
+
+</head>
+<body>
+    <canvas id="gameCanvas"></canvas>
+
+```
+<div id="ui">
+    <div class="stat-group">
+        <span class="stat-label">Punkte</span>
+        <span id="score" class="stat">0</span>
+    </div>
+    <div class="stat-group">
+        <span class="stat-label">Highscore</span>
+        <span id="highscore" class="stat">0</span>
+    </div>
+    <div class="stat-group">
+        <span class="stat-label">Level</span>
+        <span id="level" class="stat">1</span>
+    </div>
+    <div class="stat-group">
+        <span class="stat-label">Leben</span>
+        <span id="lives" class="stat"></span>
+    </div>
+</div>
+
+<div id="combo" class="combo">Combo x<span id="comboCount">0</span> 🔥</div>
+
+<button id="micButton">🎤</button>
+<div id="inputContainer">
+    <input type="number" id="answerInput" placeholder="Antwort...">
+    <button id="submitButton">✓</button>
+</div>
+<div id="recognizedText"></div>
+<div id="feedback"></div>
+<div id="errorMessage"></div>
+
+<div id="startScreen">
+    <div class="screen-panel">
+        <h1>🎮 1x1 Verteidigung! 🎮</h1>
+        <p>
+            Monster kommen auf dich zu! Jedes Monster hat eine 1x1-Aufgabe.<br><br>
+            <strong>So spielst du:</strong><br>
+            1️⃣ Gib die Antwort in das Eingabefeld ein und drücke ✓<br>
+            2️⃣ Oder drücke Enter nach der Eingabe<br>
+            3️⃣ Optional: Nutze das Mikrofon 🎤 für Spracheingabe<br><br>
+            <strong>Beispiel:</strong> Siehst du "3 × 4", gib "12" ein!
+        </p>
+        
+        <div class="difficulty-selector">
+            <button class="difficulty-btn active" data-difficulty="easy">🟢 Einfach (2-5)</button>
+            <button class="difficulty-btn" data-difficulty="medium">🟡 Mittel (2-8)</button>
+            <button class="difficulty-btn" data-difficulty="hard">🔴 Schwer (2-10)</button>
+        </div>
+
+        <button class="button" onclick="startGame()">Spiel starten!</button>
+        
+        <p id="micPermissionHelp">
+            💡 Tipp: Für die Sprachsteuerung musst du beim ersten Klick<br>
+            auf das Mikrofon die Berechtigung erteilen!
+        </p>
+    </div>
+</div>
+
+<div id="gameOverScreen" style="display: none;">
+    <div class="screen-panel">
+        <h1>Spiel vorbei! 💥</h1>
+        <div class="stats-row">
+            <div>🏆 Punkte: <span id="finalScore">0</span></div>
+            <div>📊 Level: <span id="finalLevel">0</span></div>
+        </div>
+        <div class="stats-row">
+            <div>⭐ Highscore: <span id="displayHighscore">0</span></div>
+            <div id="newHighscoreMessage" style="color: #FFD700; display: none;">
+                🎉 NEUER HIGHSCORE! 🎉
+            </div>
+        </div>
+        <button class="button" onclick="location.reload()">Nochmal spielen!</button>
+    </div>
+</div>
+
+<script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    // Sound-Effekte mit Web Audio API
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    
+    function playSound(type) {
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        switch(type) {
+            case 'correct':
+                oscillator.frequency.setValueAtTime(523.25, audioContext.currentTime); // C5
+                oscillator.frequency.exponentialRampToValueAtTime(783.99, audioContext.currentTime + 0.1); // G5
+                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.3);
+                break;
+            case 'wrong':
+                oscillator.frequency.setValueAtTime(200, audioContext.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(100, audioContext.currentTime + 0.2);
+                gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.2);
+                break;
+            case 'lose':
+                oscillator.frequency.setValueAtTime(400, audioContext.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(50, audioContext.currentTime + 0.5);
+                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.5);
+                break;
+            case 'levelup':
+                oscillator.frequency.setValueAtTime(523.25, audioContext.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(1046.50, audioContext.currentTime + 0.4);
+                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.4);
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.4);
+                break;
+        }
+    }
+
+    // Spracherkennungsobjekt
+    let recognition;
+    let isListening = false;
+    let speechRecognitionAvailable = false;
+
+    // Spielzustand
+    let gameState = {
+        score: 0,
+        lives: 3,
+        level: 1,
+        isPlaying: false,
+        monsters: [],
+        particles: [],
+        difficulty: 'easy',
+        combo: 0,
+        highscore: parseInt(localStorage.getItem('highscore') || '0')
+    };
+
+    const difficulties = {
+        easy: { maxNumber: 5, speed: 0.4 },
+        medium: { maxNumber: 8, speed: 0.5 },
+        hard: { maxNumber: 10, speed: 0.6 }
+    };
+
+    // Monster-Klasse mit verbessertem Design
+    class Monster {
+        constructor(level, difficulty) {
+            this.x = Math.random() * (canvas.width - 100);
+            this.y = -100;
+            const diffConfig = difficulties[difficulty];
+            this.speed = diffConfig.speed + (level * 0.15);
+            this.size = 80;
+            
+            const maxNumber = Math.min(diffConfig.maxNumber, 2 + Math.floor(level / 2));
+            this.num1 = Math.floor(Math.random() * (maxNumber - 1)) + 2;
+            this.num2 = Math.floor(Math.random() * (maxNumber - 1)) + 2;
+            this.answer = this.num1 * this.num2;
+            this.question = `${this.num1} × ${this.num2}`;
+            
+            this.hue = Math.random() * 360;
+            this.defeated = false;
+            this.wobble = Math.random() * Math.PI * 2;
+        }
+
+        update() {
+            if (!this.defeated) {
+                this.y += this.speed;
+                this.wobble += 0.05;
+            }
+        }
+
+        draw() {
+            if (this.defeated) return;
+
+            ctx.save();
+            ctx.translate(this.x + this.size/2, this.y + this.size/2);
+            ctx.rotate(Math.sin(this.wobble) * 0.1);
+
+            // Monster Körper mit Gradient
+            const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, this.size/2);
+            gradient.addColorStop(0, `hsl(${this.hue}, 70%, 60%)`);
+            gradient.addColorStop(1, `hsl(${this.hue}, 70%, 40%)`);
+            
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.arc(0, 0, this.size/2, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Outline
+            ctx.strokeStyle = 'rgba(0,0,0,0.3)';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+
+            // Augen
+            ctx.fillStyle = 'white';
+            ctx.beginPath();
+            ctx.arc(-this.size/6, -this.size/6, 12, 0, Math.PI * 2);
+            ctx.arc(this.size/6, -this.size/6, 12, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = 'black';
+            ctx.beginPath();
+            ctx.arc(-this.size/6, -this.size/6, 6, 0, Math.PI * 2);
+            ctx.arc(this.size/6, -this.size/6, 6, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Mund
+            ctx.strokeStyle = 'black';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.arc(0, 5, 18, 0.2, Math.PI - 0.2);
+            ctx.stroke();
+
+            ctx.restore();
+
+            // Aufgabe mit schönerem Hintergrund
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+            ctx.strokeStyle = 'rgba(0, 0, 0, 0.3)';
+            ctx.lineWidth = 2;
+            const textWidth = ctx.measureText(this.question).width;
+            
+            ctx.beginPath();
+            ctx.roundRect(this.x + this.size/2 - textWidth/2 - 10, this.y + this.size + 10, textWidth + 20, 35, 8);
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.fillStyle = 'black';
+            ctx.font = 'bold 24px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText(this.question, this.x + this.size/2, this.y + this.size + 35);
+        }
+
+        isOffScreen() {
+            return this.y > canvas.height;
+        }
+    }
+
+    // Verbesserte Partikel-Klasse
+    class Particle {
+        constructor(x, y, hue) {
+            this.x = x;
+            this.y = y;
+            this.vx = (Math.random() - 0.5) * 12;
+            this.vy = (Math.random() - 0.5) * 12 - 2;
+            this.life = 1;
+            this.hue = hue;
+            this.size = Math.random() * 6 + 4;
+            this.rotation = Math.random() * Math.PI * 2;
+            this.rotationSpeed = (Math.random() - 0.5) * 0.3;
+        }
+
+        update() {
+            this.x += this.vx;
+            this.y += this.vy;
+            this.vy += 0.3;
+            this.life -= 0.015;
+            this.rotation += this.rotationSpeed;
+        }
+
+        draw() {
+            ctx.save();
+            ctx.globalAlpha = this.life;
+            ctx.translate(this.x, this.y);
+            ctx.rotate(this.rotation);
+            
+            ctx.fillStyle = `hsl(${this.hue}, 70%, 60%)`;
+            ctx.beginPath();
+            ctx.arc(0, 0, this.size, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.restore();
+        }
+
+        isDead() {
+            return this.life <= 0;
+        }
+    }
+
+    function showError(message, duration = 5000) {
+        const errorElement = document.getElementById('errorMessage');
+        errorElement.textContent = message;
+        errorElement.style.display = 'block';
+        setTimeout(() => {
+            errorElement.style.display = 'none';
+        }, duration);
+    }
+
+    function initSpeechRecognition() {
+        if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+            console.log('Spracherkennung nicht verfügbar - verwende nur Tastatureingabe');
+            document.getElementById('micButton').classList.add('disabled');
+            document.getElementById('micButton').title = 'Spracherkennung nicht verfügbar';
+            return false;
+        }
+
+        try {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            recognition = new SpeechRecognition();
+            recognition.lang = 'de-DE';
+            recognition.continuous = false;
+            recognition.interimResults = false;
+
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript.toLowerCase().trim();
+                document.getElementById('recognizedText').textContent = `Gehört: "${transcript}"`;
+                processAnswer(transcript);
+                playSound('correct');
+            };
+
+            recognition.onerror = (event) => {
+                console.error('Spracherkennungsfehler:', event.error);
+                if (event.error === 'not-allowed') {
+                    showError('❌ Mikrofon-Zugriff verweigert.\n\n1. Klicke auf das Schloss-Symbol in der Adressleiste\n2. Erlaube den Mikrofon-Zugriff\n3. Lade die Seite neu\n\nOder nutze einfach die Tastatureingabe! ⌨️', 8000);
+                    document.getElementById('micButton').classList.add('disabled');
+                } else if (event.error === 'no-speech') {
+                    showError('Keine Sprache erkannt. Versuche es nochmal! 🎤', 3000);
+                }
+                stopListening();
+            };
+
+            recognition.onend = () => {
+                stopListening();
+            };
+
+            speechRecognitionAvailable = true;
+            return true;
+        } catch (e) {
+            console.error('Fehler beim Initialisieren der Spracherkennung:', e);
+            document.getElementById('micButton').classList.add('disabled');
+            return false;
+        }
+    }
+
+    function startListening() {
+        if (!recognition || isListening || !speechRecognitionAvailable) return;
+        
+        isListening = true;
+        document.getElementById('micButton').classList.add('listening');
+        document.getElementById('recognizedText').style.display = 'block';
+        document.getElementById('recognizedText').textContent = 'Hört zu... 👂';
+        
+        try {
+            recognition.start();
+        } catch (e) {
+            console.error('Fehler beim Starten der Spracherkennung:', e);
+            stopListening();
+        }
+    }
+
+    function stopListening() {
+        isListening = false;
+        document.getElementById('micButton').classList.remove('listening');
+        setTimeout(() => {
+            document.getElementById('recognizedText').style.display = 'none';
+        }, 2000);
+    }
+
+    function numberWordToDigit(word) {
+        const numbers = {
+            'null': 0, 'eins': 1, 'zwei': 2, 'drei': 3, 'vier': 4,
+            'fünf': 5, 'sechs': 6, 'sieben': 7, 'acht': 8, 'neun': 9,
+            'zehn': 10, 'elf': 11, 'zwölf': 12, 'dreizehn': 13, 'vierzehn': 14,
+            'fünfzehn': 15, 'sechzehn': 16, 'siebzehn': 17, 'achtzehn': 18, 'neunzehn': 19,
+            'zwanzig': 20, 'einundzwanzig': 21, 'zweiundzwanzig': 22, 'dreiundzwanzig': 23,
+            'vierundzwanzig': 24, 'fünfundzwanzig': 25, 'sechsundzwanzig': 26, 'siebenundzwanzig': 27,
+            'achtundzwanzig': 28, 'neunundzwanzig': 29, 'dreißig': 30, 'einunddreißig': 31,
+            'zweiunddreißig': 32, 'dreiunddreißig': 33, 'vierunddreißig': 34, 'fünfunddreißig': 35,
+            'sechsunddreißig': 36, 'siebenunddreißig': 37, 'achtunddreißig': 38, 'neununddreißig': 39,
+            'vierzig': 40, 'einundvierzig': 41, 'zweiundvierzig': 42, 'dreiundvierzig': 43,
+            'vierundvierzig': 44, 'fünfundvierzig': 45, 'sechsundvierzig': 46, 'siebenundvierzig': 47,
+            'achtundvierzig': 48, 'neunundvierzig': 49, 'fünfzig': 50, 'einundfünfzig': 51,
+            'zweiundfünfzig': 52, 'dreiundfünfzig': 53, 'vierundfünfzig': 54, 'fünfundfünfzig': 55,
+            'sechsundfünfzig': 56, 'siebenundfünfzig': 57, 'achtundfünfzig': 58, 'neunundfünfzig': 59,
+            'sechzig': 60, 'einundsechzig': 61, 'zweiundsechzig': 62, 'dreiundsechzig': 63,
+            'vierundsechzig': 64, 'fünfundsechzig': 65, 'sechsundsechzig': 66, 'siebenundsechzig': 67,
+            'achtundsechzig': 68, 'neunundsechzig': 69, 'siebzig': 70, 'einundsiebzig': 71,
+            'zweiundsiebzig': 72, 'dreiundsiebzig': 73, 'vierundsiebzig': 74, 'fünfundsiebzig': 75,
+            'sechsundsiebzig': 76, 'siebenundsiebzig': 77, 'achtundsiebzig': 78, 'neunundsiebzig': 79,
+            'achtzig': 80, 'einundachtzig': 81, 'zweiundachtzig': 82, 'dreiundachtzig': 83,
+            'vierundachtzig': 84, 'fünfundachtzig': 85, 'sechsundachtzig': 86, 'siebenundachtzig': 87,
+            'achtundachtzig': 88, 'neunundachtzig': 89, 'neunzig': 90, 'einundneunzig': 91,
+            'zweiundneunzig': 92, 'dreiundneunzig': 93, 'vierundneunzig': 94, 'fünfundneunzig': 95,
+            'sechsundneunzig': 96, 'siebenundneunzig': 97, 'achtundneunzig': 98, 'neunundneunzig': 99,
+            'hundert': 100, 'einhundert': 100
+        };
+        return numbers[word] !== undefined ? numbers[word] : null;
+    }
+
+    function processAnswer(input) {
+        if (!gameState.isPlaying || gameState.monsters.length === 0) return;
+
+        let spokenAnswer = null;
+        
+        if (typeof input === 'number') {
+            spokenAnswer = input;
+        } else {
+            spokenAnswer = numberWordToDigit(input);
+            
+            if (spokenAnswer === null) {
+                const match = input.match(/\d+/);
+                if (match) {
+                    spokenAnswer = parseInt(match[0]);
+                }
+            }
+        }
+
+        if (spokenAnswer === null) {
+            showFeedback('❓', 'wrong');
+            playSound('wrong');
+            gameState.combo = 0;
+            updateCombo();
+            return;
+        }
+
+        let foundMonster = false;
+        for (let i = gameState.monsters.length - 1; i >= 0; i--) {
+            const monster = gameState.monsters[i];
+            if (!monster.defeated && monster.answer === spokenAnswer) {
+                defeatMonster(monster, i);
+                foundMonster = true;
+                break;
+            }
+        }
+
+        if (!foundMonster) {
+            showFeedback('✗', 'wrong');
+            playSound('wrong');
+            gameState.combo = 0;
+            updateCombo();
+        }
+    }
+
+    function defeatMonster(monster, index) {
+        monster.defeated = true;
+        gameState.combo++;
+        const comboBonus = Math.floor(gameState.combo / 3);
+        gameState.score += (10 * gameState.level) + (comboBonus * 5);
+        
+        updateUI();
+        updateCombo();
+        showFeedback('✓', 'correct');
+        playSound('correct');
+
+        // Erstelle mehr Partikel
+        for (let i = 0; i < 30; i++) {
+            gameState.particles.push(new Particle(
+                monster.x + monster.size/2,
+                monster.y + monster.size/2,
+                monster.hue
+            ));
+        }
+
+        gameState.monsters.splice(index, 1);
+
+        // Level-Aufstieg
+        if (gameState.score > 0 && gameState.score % 100 === 0) {
+            gameState.level++;
+            playSound('levelup');
+            updateUI();
+        }
+    }
+
+    function updateCombo() {
+        const comboElement = document.getElementById('combo');
+        const comboCount = document.getElementById('comboCount');
+        
+        if (gameState.combo >= 3) {
+            comboCount.textContent = gameState.combo;
+            comboElement.classList.add('visible');
+        } else {
+            comboElement.classList.remove('visible');
+        }
+    }
+
+    function showFeedback(text, type) {
+        const feedback = document.getElementById('feedback');
+        feedback.textContent = text;
+        feedback.className = type;
+        setTimeout(() => {
+            feedback.className = '';
+        }, 1000);
+    }
+
+    function spawnMonster() {
+        if (!gameState.isPlaying) return;
+        gameState.monsters.push(new Monster(gameState.level, gameState.difficulty));
+    }
+
+    function loseLife() {
+        gameState.lives--;
+        gameState.combo = 0;
+        updateCombo();
+        playSound('lose');
+        updateUI();
+        
+        if (gameState.lives <= 0) {
+            gameOver();
+        }
+    }
+
+    function updateUI() {
+        document.getElementById('score').textContent = gameState.score;
+        document.getElementById('level').textContent = gameState.level;
+        document.getElementById('highscore').textContent = gameState.highscore;
+        
+        const livesElement = document.getElementById('lives');
+        livesElement.innerHTML = '';
+        for (let i = 0; i < gameState.lives; i++) {
+            livesElement.innerHTML += '<span class="heart">❤️</span>';
+        }
+    }
+
+    function handleSubmit() {
+        const input = document.getElementById('answerInput');
+        const value = parseInt(input.value);
+        
+        if (!isNaN(value)) {
+            processAnswer(value);
+            input.value = '';
+            input.focus();
+        }
+    }
+
+    function startGame() {
+        initSpeechRecognition();
+        
+        document.getElementById('startScreen').style.display = 'none';
+        gameState.isPlaying = true;
+        gameState.score = 0;
+        gameState.lives = 3;
+        gameState.level = 1;
+        gameState.combo = 0;
+        gameState.monsters = [];
+        gameState.particles = [];
+        
+        updateUI();
+        updateCombo();
+        
+        document.getElementById('answerInput').focus();
+        
+        gameLoop();
+        
+        setInterval(() => {
+            if (gameState.isPlaying && gameState.monsters.length < 5) {
+                spawnMonster();
+            }
+        }, 3000 - (gameState.level * 150));
+    }
+
+    function gameOver() {
+        gameState.isPlaying = false;
+        
+        // Highscore prüfen
+        const isNewHighscore = gameState.score > gameState.highscore;
+        if (isNewHighscore) {
+            gameState.highscore = gameState.score;
+            localStorage.setItem('highscore', gameState.score);
+            document.getElementById('newHighscoreMessage').style.display = 'block';
+        }
+        
+        document.getElementById('finalScore').textContent = gameState.score;
+        document.getElementById('finalLevel').textContent = gameState.level;
+        document.getElementById('displayHighscore').textContent = gameState.highscore;
+        document.getElementById('gameOverScreen').style.display = 'flex';
+    }
+
+    function gameLoop() {
+        if (!gameState.isPlaying) return;
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        for (let i = gameState.monsters.length - 1; i >= 0; i--) {
+            const monster = gameState.monsters[i];
+            monster.update();
+            monster.draw();
+
+            if (monster.isOffScreen()) {
+                loseLife();
+                gameState.monsters.splice(i, 1);
+            }
+        }
+
+        for (let i = gameState.particles.length - 1; i >= 0; i--) {
+            const particle = gameState.particles[i];
+            particle.update();
+            particle.draw();
+
+            if (particle.isDead()) {
+                gameState.particles.splice(i, 1);
+            }
+        }
+
+        requestAnimationFrame(gameLoop);
+    }
+
+    // Schwierigkeitsgrad-Auswahl
+    document.querySelectorAll('.difficulty-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.difficulty-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            gameState.difficulty = btn.dataset.difficulty;
+        });
+    });
+
+    // Event-Listener
+    document.getElementById('micButton').addEventListener('click', () => {
+        if (document.getElementById('micButton').classList.contains('disabled')) {
+            showError('⚠️ Spracherkennung nicht verfügbar.\n\nNutze bitte die Tastatureingabe oder probiere einen anderen Browser (Chrome/Edge empfohlen)!', 5000);
+            return;
+        }
+        
+        if (isListening) {
+            recognition.stop();
+        } else {
+            startListening();
+        }
+    });
+
+    document.getElementById('submitButton').addEventListener('click', handleSubmit);
+
+    document.getElementById('answerInput').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            handleSubmit();
+        }
+    });
+
+    window.addEventListener('resize', () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    });
+
+    // Initiales Highscore-Display
+    document.getElementById('highscore').textContent = gameState.highscore;
+</script>
+```
+
+</body>
+</html>
