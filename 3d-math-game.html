@@ -61,89 +61,26 @@
         #lives { color: #FF4444; }
         #chapter { color: #00CED1; }
 
-        /* Encounter Display - Center Screen */
-        #encounterDisplay {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 20;
-            text-align: center;
-            pointer-events: none;
-            display: none;
-        }
-
-        .creature-label {
-            background: linear-gradient(145deg, rgba(40, 20, 10, 0.95), rgba(20, 10, 5, 0.95));
-            border: 3px solid #8B4513;
-            border-radius: 10px;
-            padding: 15px 30px;
-            margin-bottom: 15px;
-            box-shadow: 0 0 30px rgba(139, 69, 19, 0.5);
-        }
-
-        .creature-name {
-            font-size: 18px;
-            color: #FF6B6B;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
-            margin-bottom: 8px;
-        }
-
-        .creature-question {
-            font-size: 48px;
-            font-weight: bold;
-            color: #7CFC00;
-            text-shadow: 3px 3px 6px rgba(0,0,0,0.8), 0 0 20px rgba(124, 252, 0, 0.5);
-        }
-
-        /* Timer Bar */
-        .timer-container {
-            width: 300px;
-            height: 12px;
-            background: rgba(0,0,0,0.7);
-            border: 2px solid #8B4513;
-            border-radius: 6px;
-            overflow: hidden;
-            margin: 10px auto;
-        }
-
-        .timer-bar {
-            height: 100%;
-            background: linear-gradient(90deg, #FF4444, #FFAA00, #7CFC00);
-            transition: width 0.1s linear;
-            box-shadow: 0 0 10px currentColor;
-        }
-
-        .timer-bar.danger {
-            background: linear-gradient(90deg, #FF0000, #FF4444);
-            animation: timerPulse 0.3s infinite;
-        }
-
-        @keyframes timerPulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.6; }
-        }
-
-        /* Input at bottom */
+        /* Input at bottom - compact */
         #inputContainer {
             position: absolute;
-            bottom: 25px;
+            bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
             gap: 10px;
             z-index: 10;
             background: linear-gradient(145deg, rgba(40, 25, 15, 0.95), rgba(25, 15, 8, 0.95));
-            padding: 15px 20px;
+            padding: 12px 18px;
             border-radius: 12px;
             box-shadow: 0 5px 25px rgba(0,0,0,0.6);
             border: 2px solid #8B4513;
         }
 
         #answerInput {
-            width: 180px;
-            padding: 15px;
-            font-size: 28px;
+            width: 140px;
+            padding: 12px;
+            font-size: 24px;
             border: 2px solid #8B4513;
             border-radius: 8px;
             text-align: center;
@@ -160,8 +97,8 @@
         }
 
         #submitButton {
-            padding: 15px 25px;
-            font-size: 24px;
+            padding: 12px 20px;
+            font-size: 20px;
             background: linear-gradient(145deg, #8B4513, #654321);
             border: 2px solid #DAA520;
             border-radius: 8px;
@@ -179,10 +116,10 @@
         /* Feedback */
         #feedback {
             position: absolute;
-            top: 35%;
+            top: 30%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 80px;
+            font-size: 70px;
             font-weight: bold;
             opacity: 0;
             pointer-events: none;
@@ -251,35 +188,38 @@
             align-items: center;
             z-index: 1000;
             color: white;
+            overflow-y: auto;
         }
 
         .screen-panel {
             background: linear-gradient(135deg, rgba(50, 30, 15, 0.95), rgba(30, 18, 8, 0.95));
-            padding: 45px 55px;
+            padding: 35px 45px;
             border-radius: 15px;
             border: 3px solid #8B4513;
             box-shadow: 0 15px 50px rgba(0,0,0,0.8), 0 0 60px rgba(139, 69, 19, 0.3);
-            max-width: 700px;
+            max-width: 800px;
             text-align: center;
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
         .screen-panel h1 {
-            font-size: 42px;
-            margin-bottom: 20px;
+            font-size: 38px;
+            margin-bottom: 15px;
             color: #FFD700;
             text-shadow: 3px 3px 6px rgba(0,0,0,0.8), 0 0 30px rgba(255, 215, 0, 0.4);
         }
 
         .screen-panel p {
-            font-size: 16px;
-            margin-bottom: 20px;
+            font-size: 15px;
+            margin-bottom: 15px;
             color: #c9a86c;
-            line-height: 1.8;
+            line-height: 1.7;
         }
 
         .button {
-            padding: 18px 45px;
-            font-size: 22px;
+            padding: 16px 40px;
+            font-size: 20px;
             background: linear-gradient(145deg, #8B4513, #654321);
             border: 3px solid #DAA520;
             border-radius: 10px;
@@ -299,13 +239,13 @@
 
         .difficulty-selector {
             display: flex;
-            gap: 12px;
-            margin: 20px 0;
+            gap: 10px;
+            margin: 15px 0;
             justify-content: center;
         }
 
         .difficulty-btn {
-            padding: 12px 22px;
+            padding: 10px 20px;
             font-size: 14px;
             border: 2px solid #8B4513;
             background: rgba(50, 30, 15, 0.8);
@@ -324,6 +264,76 @@
             border-color: #FFD700;
             color: #3d2817;
             font-weight: bold;
+        }
+
+        /* Number row selector */
+        .row-selector {
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            border: 1px solid #8B4513;
+        }
+
+        .row-selector h3 {
+            color: #FFD700;
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+
+        .row-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .row-btn {
+            width: 50px;
+            height: 50px;
+            border: 2px solid #8B4513;
+            background: rgba(50, 30, 15, 0.8);
+            color: #c9a86c;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .row-btn:hover {
+            background: rgba(70, 40, 20, 0.9);
+            transform: scale(1.05);
+        }
+
+        .row-btn.active {
+            background: linear-gradient(145deg, #4CAF50, #388E3C);
+            border-color: #7CFC00;
+            color: white;
+            box-shadow: 0 0 10px rgba(124, 252, 0, 0.4);
+        }
+
+        .row-presets {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 12px;
+        }
+
+        .preset-btn {
+            padding: 8px 16px;
+            font-size: 12px;
+            border: 1px solid #8B4513;
+            background: rgba(80, 50, 25, 0.8);
+            color: #c9a86c;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .preset-btn:hover {
+            background: rgba(100, 60, 30, 0.9);
+            color: #FFD700;
         }
 
         /* Combo display */
@@ -388,42 +398,77 @@
             color: #FFD700;
         }
 
-        /* Multiple creatures indicator */
-        #multiCreature {
+        /* Active creatures display at bottom */
+        #activeCreatures {
             position: absolute;
-            bottom: 100px;
+            bottom: 80px;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
-            gap: 20px;
-            z-index: 15;
+            gap: 15px;
+            z-index: 10;
         }
 
-        .mini-creature {
-            background: rgba(40, 25, 15, 0.9);
+        .creature-card {
+            background: linear-gradient(145deg, rgba(40, 25, 15, 0.9), rgba(25, 15, 8, 0.9));
             border: 2px solid #8B4513;
-            border-radius: 8px;
-            padding: 8px 15px;
+            border-radius: 10px;
+            padding: 10px 15px;
             text-align: center;
-            opacity: 0.6;
+            min-width: 100px;
             transition: all 0.3s;
         }
 
-        .mini-creature.active {
-            opacity: 1;
+        .creature-card.targeted {
             border-color: #FFD700;
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            transform: scale(1.05);
         }
 
-        .mini-creature .name {
+        .creature-card .name {
             font-size: 12px;
             color: #FF6B6B;
+            margin-bottom: 5px;
         }
 
-        .mini-creature .answer {
-            font-size: 18px;
+        .creature-card .question {
+            font-size: 20px;
             color: #7CFC00;
             font-weight: bold;
+        }
+
+        .creature-card .timer {
+            height: 4px;
+            background: #333;
+            border-radius: 2px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+
+        .creature-card .timer-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #FF4444, #FFAA00, #7CFC00);
+            transition: width 0.1s linear;
+        }
+
+        .creature-card .timer-fill.danger {
+            background: #FF4444;
+            animation: timerPulse 0.3s infinite;
+        }
+
+        @keyframes timerPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        #creatureCount {
+            position: absolute;
+            top: 80px;
+            left: 25px;
+            font-size: 16px;
+            color: #c9a86c;
+            z-index: 10;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
         }
     </style>
 </head>
@@ -450,20 +495,11 @@
     </div>
 
     <div id="comboDisplay">COMBO x<span id="comboCount">0</span></div>
+    <div id="creatureCount">Kreaturen: <span id="creatureNum">0</span></div>
 
     <div id="chapterAnnounce"></div>
 
-    <div id="encounterDisplay">
-        <div class="creature-label">
-            <div class="creature-name" id="creatureName">Werwolf</div>
-            <div class="creature-question" id="creatureQuestion">3 × 4 = ?</div>
-        </div>
-        <div class="timer-container">
-            <div class="timer-bar" id="timerBar"></div>
-        </div>
-    </div>
-
-    <div id="multiCreature"></div>
+    <div id="activeCreatures"></div>
 
     <div id="inputContainer">
         <input type="number" id="answerInput" placeholder="?" autocomplete="off">
@@ -477,17 +513,35 @@
         <div class="screen-panel">
             <h1>Fabelwesen Abwehr</h1>
             <p>
-                Du bewegst dich durch einen dunklen Wald voller Gefahren!<br>
-                Ploetzlich tauchen Fabelwesen vor dir auf - <br>
-                <strong>Loese ihre Rechenraetsel bevor die Zeit ablaeuft!</strong><br><br>
-                Je schneller du antwortest, desto mehr Punkte!<br>
-                Falsche Antworten oder Zeitablauf kosten Leben!
+                Bewege dich durch den dunklen Wald und besiege Fabelwesen!<br>
+                <strong>Loese ihre Rechenaufgaben bevor die Zeit ablaeuft!</strong>
             </p>
 
             <div class="difficulty-selector">
                 <button class="difficulty-btn active" data-difficulty="easy">Lehrling</button>
                 <button class="difficulty-btn" data-difficulty="medium">Geselle</button>
                 <button class="difficulty-btn" data-difficulty="hard">Meister</button>
+            </div>
+
+            <div class="row-selector">
+                <h3>Zahlenreihen auswaehlen:</h3>
+                <div class="row-buttons">
+                    <button class="row-btn active" data-row="2">2</button>
+                    <button class="row-btn active" data-row="3">3</button>
+                    <button class="row-btn active" data-row="4">4</button>
+                    <button class="row-btn active" data-row="5">5</button>
+                    <button class="row-btn active" data-row="6">6</button>
+                    <button class="row-btn active" data-row="7">7</button>
+                    <button class="row-btn active" data-row="8">8</button>
+                    <button class="row-btn active" data-row="9">9</button>
+                    <button class="row-btn active" data-row="10">10</button>
+                </div>
+                <div class="row-presets">
+                    <button class="preset-btn" onclick="selectRows([2,3,4,5])">Einfach (2-5)</button>
+                    <button class="preset-btn" onclick="selectRows([6,7,8])">Mittel (6-8)</button>
+                    <button class="preset-btn" onclick="selectRows([7,8,9])">Schwer (7-9)</button>
+                    <button class="preset-btn" onclick="selectRows([2,3,4,5,6,7,8,9,10])">Alle</button>
+                </div>
             </div>
 
             <button class="button" onclick="startGame()">Expedition starten!</button>
@@ -516,12 +570,69 @@
     <script>
         // ==================== THREE.JS SETUP ====================
         let scene, camera, renderer;
-        let creatures = [];
+        let activeCreatures = [];
         let particles = [];
         let environmentObjects = [];
         let pathPoints = [];
         let currentPathIndex = 0;
         let pathProgress = 0;
+
+        // ==================== MATH PROBLEM POOL ====================
+        let problemPool = [];
+        let usedProblems = new Set();
+
+        function initProblemPool() {
+            problemPool = [];
+            usedProblems.clear();
+
+            const selectedRows = gameState.selectedRows;
+
+            // Create all possible problems from selected rows
+            for (const row of selectedRows) {
+                for (let i = 2; i <= 10; i++) {
+                    // Add both directions: row × i and i × row
+                    const key1 = `${row}x${i}`;
+                    const key2 = `${i}x${row}`;
+
+                    if (!problemPool.some(p => p.key === key1)) {
+                        problemPool.push({ num1: row, num2: i, key: key1 });
+                    }
+                    if (row !== i && !problemPool.some(p => p.key === key2)) {
+                        problemPool.push({ num1: i, num2: row, key: key2 });
+                    }
+                }
+            }
+
+            // Shuffle the pool
+            shuffleArray(problemPool);
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function getNextProblem() {
+            // If pool is empty or all used, refill
+            if (problemPool.length === 0 || usedProblems.size >= problemPool.length) {
+                usedProblems.clear();
+                shuffleArray(problemPool);
+            }
+
+            // Find unused problem
+            for (const problem of problemPool) {
+                if (!usedProblems.has(problem.key)) {
+                    usedProblems.add(problem.key);
+                    return { num1: problem.num1, num2: problem.num2 };
+                }
+            }
+
+            // Fallback
+            const idx = Math.floor(Math.random() * problemPool.length);
+            return { num1: problemPool[idx].num1, num2: problemPool[idx].num2 };
+        }
 
         // ==================== GAME STATE ====================
         let gameState = {
@@ -532,74 +643,53 @@
             difficulty: 'easy',
             combo: 0,
             highscore: parseInt(localStorage.getItem('mathGame3DHighscore') || '0'),
-            currentEncounter: null,
-            encounterTimer: null,
-            encounterTimeLeft: 0,
-            encounterMaxTime: 5000,
-            isInEncounter: false,
             cameraMoving: true,
-            encounterQueue: [],
-            totalEncounters: 0,
-            chapterEncounters: 0
+            totalDefeated: 0,
+            chapterDefeated: 0,
+            selectedRows: [2, 3, 4, 5, 6, 7, 8, 9, 10],
+            maxActiveCreatures: 1,
+            spawnTimer: null
         };
 
         const difficulties = {
-            easy: { maxNumber: 5, baseTime: 6000, minTime: 3000 },
-            medium: { maxNumber: 8, baseTime: 5000, minTime: 2500 },
-            hard: { maxNumber: 10, baseTime: 4000, minTime: 2000 }
+            easy: { baseTime: 8000, minTime: 4000, spawnInterval: 4000 },
+            medium: { baseTime: 6000, minTime: 3000, spawnInterval: 3000 },
+            hard: { baseTime: 4500, minTime: 2500, spawnInterval: 2500 }
         };
 
         // ==================== CREATURE DEFINITIONS ====================
         const creatureTypes = [
-            {
-                name: 'Werwolf',
-                color: 0x4a3728,
-                furColor: 0x5d4037,
-                eyeColor: 0xffff00,
-                points: 10,
-                buildModel: buildWerewolf
-            },
-            {
-                name: 'Greif',
-                color: 0xdaa520,
-                featherColor: 0xb8860b,
-                eyeColor: 0xff6600,
-                points: 15,
-                buildModel: buildGriffin
-            },
-            {
-                name: 'Gnom',
-                color: 0x228b22,
-                skinColor: 0xdeb887,
-                eyeColor: 0x000000,
-                points: 8,
-                buildModel: buildGnome
-            },
-            {
-                name: 'Drache',
-                color: 0x8b0000,
-                scaleColor: 0xb22222,
-                eyeColor: 0xff0000,
-                points: 25,
-                buildModel: buildDragon
-            },
-            {
-                name: 'Troll',
-                color: 0x4a5568,
-                skinColor: 0x6b7280,
-                eyeColor: 0x90ee90,
-                points: 20,
-                buildModel: buildTroll
-            },
-            {
-                name: 'Hexe',
-                color: 0x4b0082,
-                cloakColor: 0x2e0854,
-                eyeColor: 0x00ff00,
-                points: 18,
-                buildModel: buildWitch
-            }
+            { name: 'Werwolf', color: 0x4a3728, furColor: 0x5d4037, eyeColor: 0xffff00, points: 10, buildModel: buildWerewolf },
+            { name: 'Greif', color: 0xdaa520, featherColor: 0xb8860b, eyeColor: 0xff6600, points: 15, buildModel: buildGriffin },
+            { name: 'Gnom', color: 0x228b22, skinColor: 0xdeb887, eyeColor: 0x000000, points: 8, buildModel: buildGnome },
+            { name: 'Drache', color: 0x8b0000, scaleColor: 0xb22222, eyeColor: 0xff0000, points: 25, buildModel: buildDragon },
+            { name: 'Troll', color: 0x4a5568, skinColor: 0x6b7280, eyeColor: 0x90ee90, points: 20, buildModel: buildTroll },
+            { name: 'Hexe', color: 0x4b0082, cloakColor: 0x2e0854, eyeColor: 0x00ff00, points: 18, buildModel: buildWitch }
         ];
+
+        // ==================== ROW SELECTION ====================
+        function selectRows(rows) {
+            document.querySelectorAll('.row-btn').forEach(btn => {
+                const row = parseInt(btn.dataset.row);
+                if (rows.includes(row)) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+            updateSelectedRows();
+        }
+
+        function updateSelectedRows() {
+            gameState.selectedRows = [];
+            document.querySelectorAll('.row-btn.active').forEach(btn => {
+                gameState.selectedRows.push(parseInt(btn.dataset.row));
+            });
+            if (gameState.selectedRows.length === 0) {
+                gameState.selectedRows = [2, 3, 4, 5, 6, 7, 8, 9, 10];
+                document.querySelectorAll('.row-btn').forEach(btn => btn.classList.add('active'));
+            }
+        }
 
         // ==================== AUDIO ====================
         const audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -629,14 +719,14 @@
                     oscillator.start(audioContext.currentTime);
                     oscillator.stop(audioContext.currentTime + 0.4);
                     break;
-                case 'encounter':
+                case 'spawn':
                     oscillator.type = 'square';
                     oscillator.frequency.setValueAtTime(220, audioContext.currentTime);
                     oscillator.frequency.setValueAtTime(330, audioContext.currentTime + 0.1);
-                    gainNode.gain.setValueAtTime(0.15, audioContext.currentTime);
-                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+                    gainNode.gain.setValueAtTime(0.12, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.15);
                     oscillator.start(audioContext.currentTime);
-                    oscillator.stop(audioContext.currentTime + 0.2);
+                    oscillator.stop(audioContext.currentTime + 0.15);
                     break;
                 case 'chapter':
                     oscillator.type = 'sine';
@@ -651,10 +741,10 @@
                 case 'timeWarning':
                     oscillator.type = 'square';
                     oscillator.frequency.setValueAtTime(440, audioContext.currentTime);
-                    gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
-                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+                    gainNode.gain.setValueAtTime(0.08, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.08);
                     oscillator.start(audioContext.currentTime);
-                    oscillator.stop(audioContext.currentTime + 0.1);
+                    oscillator.stop(audioContext.currentTime + 0.08);
                     break;
             }
         }
@@ -663,7 +753,7 @@
         function init3D() {
             scene = new THREE.Scene();
             scene.background = new THREE.Color(0x050208);
-            scene.fog = new THREE.FogExp2(0x0a0510, 0.025);
+            scene.fog = new THREE.FogExp2(0x0a0510, 0.02);
 
             camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 500);
             camera.position.set(0, 1.7, 0);
@@ -683,28 +773,21 @@
             moonLight.castShadow = true;
             scene.add(moonLight);
 
-            // Create the path
             createPath();
-
-            // Create environment
             createEnvironment();
 
             window.addEventListener('resize', onWindowResize);
         }
 
         function createPath() {
-            // Create a winding path through the forest
             pathPoints = [];
             let x = 0, z = 0, angle = 0;
 
-            for (let i = 0; i < 100; i++) {
+            for (let i = 0; i < 150; i++) {
                 pathPoints.push(new THREE.Vector3(x, 1.7, z));
-
-                // Random turns
                 if (i > 0 && i % 8 === 0) {
-                    angle += (Math.random() - 0.5) * 0.8;
+                    angle += (Math.random() - 0.5) * 0.6;
                 }
-
                 x += Math.sin(angle) * 5;
                 z -= Math.cos(angle) * 5;
             }
@@ -712,36 +795,24 @@
 
         function createEnvironment() {
             // Ground
-            const groundGeom = new THREE.PlaneGeometry(500, 500);
-            const groundMat = new THREE.MeshStandardMaterial({
-                color: 0x1a0f05,
-                roughness: 1
-            });
+            const groundGeom = new THREE.PlaneGeometry(600, 600);
+            const groundMat = new THREE.MeshStandardMaterial({ color: 0x1a0f05, roughness: 1 });
             const ground = new THREE.Mesh(groundGeom, groundMat);
             ground.rotation.x = -Math.PI / 2;
             ground.receiveShadow = true;
             scene.add(ground);
 
-            // Create trees and objects along the path
             pathPoints.forEach((point, i) => {
                 if (i % 3 === 0) {
-                    // Trees on both sides
                     createTree(point.x - 6 - Math.random() * 4, point.z + (Math.random() - 0.5) * 4);
                     createTree(point.x + 6 + Math.random() * 4, point.z + (Math.random() - 0.5) * 4);
                 }
-
                 if (i % 5 === 0) {
-                    // Torches
                     createTorch(point.x - 3, point.z);
                     createTorch(point.x + 3, point.z);
                 }
-
                 if (i % 7 === 0 && Math.random() > 0.5) {
                     createGravestone(point.x + (Math.random() > 0.5 ? 4 : -4), point.z);
-                }
-
-                if (i % 10 === 0 && Math.random() > 0.5) {
-                    createRuins(point.x + (Math.random() > 0.5 ? 8 : -8), point.z);
                 }
             });
 
@@ -764,14 +835,11 @@
             }
             starGeom.setAttribute('position', new THREE.Float32BufferAttribute(starPositions, 3));
             const starMat = new THREE.PointsMaterial({ color: 0xffffff, size: 0.5 });
-            const stars = new THREE.Points(starGeom, starMat);
-            scene.add(stars);
+            scene.add(new THREE.Points(starGeom, starMat));
         }
 
         function createTree(x, z) {
             const group = new THREE.Group();
-
-            // Trunk
             const trunkGeom = new THREE.CylinderGeometry(0.3, 0.5, 6, 8);
             const trunkMat = new THREE.MeshStandardMaterial({ color: 0x2d1b0e });
             const trunk = new THREE.Mesh(trunkGeom, trunkMat);
@@ -779,44 +847,30 @@
             trunk.castShadow = true;
             group.add(trunk);
 
-            // Dead branches
-            for (let i = 0; i < 6; i++) {
+            for (let i = 0; i < 5; i++) {
                 const branchGeom = new THREE.CylinderGeometry(0.03, 0.1, 1.5 + Math.random());
                 const branch = new THREE.Mesh(branchGeom, trunkMat);
-                branch.position.y = 3 + i * 0.8;
+                branch.position.y = 3 + i * 0.9;
                 branch.rotation.z = (Math.random() - 0.5) * 1.2;
                 branch.rotation.y = Math.random() * Math.PI * 2;
-                branch.position.x = Math.sin(branch.rotation.y) * 0.5;
-                branch.position.z = Math.cos(branch.rotation.y) * 0.5;
                 group.add(branch);
             }
-
             group.position.set(x, 0, z);
             scene.add(group);
         }
 
         function createTorch(x, z) {
             const group = new THREE.Group();
-
-            // Pole
             const poleGeom = new THREE.CylinderGeometry(0.08, 0.12, 2.5, 6);
             const poleMat = new THREE.MeshStandardMaterial({ color: 0x3d2817 });
             const pole = new THREE.Mesh(poleGeom, poleMat);
             pole.position.y = 1.25;
             group.add(pole);
 
-            // Flame holder
-            const holderGeom = new THREE.CylinderGeometry(0.15, 0.1, 0.3, 8);
-            const holder = new THREE.Mesh(holderGeom, poleMat);
-            holder.position.y = 2.5;
-            group.add(holder);
-
-            // Fire light
             const fireLight = new THREE.PointLight(0xff6622, 1.5, 12);
             fireLight.position.y = 2.7;
             group.add(fireLight);
 
-            // Flame particles (simple)
             const flameGeom = new THREE.ConeGeometry(0.1, 0.4, 8);
             const flameMat = new THREE.MeshBasicMaterial({ color: 0xff4400 });
             const flame = new THREE.Mesh(flameGeom, flameMat);
@@ -825,7 +879,6 @@
 
             group.position.set(x, 0, z);
             group.userData.light = fireLight;
-            group.userData.flame = flame;
             environmentObjects.push(group);
             scene.add(group);
         }
@@ -837,71 +890,32 @@
             const stone = new THREE.Mesh(geom, mat);
             stone.position.set(x, height / 2, z);
             stone.rotation.y = (Math.random() - 0.5) * 0.4;
-            stone.rotation.x = (Math.random() - 0.5) * 0.1;
             stone.castShadow = true;
             scene.add(stone);
         }
 
-        function createRuins(x, z) {
-            const group = new THREE.Group();
-            const mat = new THREE.MeshStandardMaterial({ color: 0x4a4a4a, roughness: 0.95 });
-
-            // Broken pillars
-            for (let i = 0; i < 3; i++) {
-                const height = 1 + Math.random() * 2;
-                const pillarGeom = new THREE.CylinderGeometry(0.3, 0.35, height, 8);
-                const pillar = new THREE.Mesh(pillarGeom, mat);
-                pillar.position.set((Math.random() - 0.5) * 3, height / 2, (Math.random() - 0.5) * 3);
-                pillar.rotation.x = (Math.random() - 0.5) * 0.2;
-                pillar.rotation.z = (Math.random() - 0.5) * 0.2;
-                group.add(pillar);
-            }
-
-            // Fallen blocks
-            for (let i = 0; i < 4; i++) {
-                const blockGeom = new THREE.BoxGeometry(0.5 + Math.random() * 0.5, 0.3, 0.5 + Math.random() * 0.3);
-                const block = new THREE.Mesh(blockGeom, mat);
-                block.position.set((Math.random() - 0.5) * 4, 0.15, (Math.random() - 0.5) * 4);
-                block.rotation.y = Math.random() * Math.PI;
-                group.add(block);
-            }
-
-            group.position.set(x, 0, z);
-            scene.add(group);
-        }
-
         // ==================== CREATURE MODEL BUILDERS ====================
         function buildWerewolf(group, type) {
-            const furMat = new THREE.MeshStandardMaterial({
-                color: type.furColor,
-                roughness: 0.9
-            });
-            const bodyMat = new THREE.MeshStandardMaterial({
-                color: type.color,
-                roughness: 0.8
-            });
+            const furMat = new THREE.MeshStandardMaterial({ color: type.furColor, roughness: 0.9 });
+            const bodyMat = new THREE.MeshStandardMaterial({ color: type.color, roughness: 0.8 });
 
-            // Body (hunched)
             const bodyGeom = new THREE.SphereGeometry(0.6, 16, 16);
             const body = new THREE.Mesh(bodyGeom, furMat);
             body.scale.set(1, 0.8, 1.2);
             body.position.y = 1;
             group.add(body);
 
-            // Head
             const headGeom = new THREE.SphereGeometry(0.35, 16, 16);
             const head = new THREE.Mesh(headGeom, furMat);
             head.position.set(0, 1.5, 0.4);
             group.add(head);
 
-            // Snout
             const snoutGeom = new THREE.ConeGeometry(0.15, 0.4, 8);
             const snout = new THREE.Mesh(snoutGeom, bodyMat);
             snout.rotation.x = Math.PI / 2;
             snout.position.set(0, 1.45, 0.75);
             group.add(snout);
 
-            // Ears
             [-0.2, 0.2].forEach(xOffset => {
                 const earGeom = new THREE.ConeGeometry(0.1, 0.25, 4);
                 const ear = new THREE.Mesh(earGeom, furMat);
@@ -910,7 +924,6 @@
                 group.add(ear);
             });
 
-            // Eyes (glowing)
             const eyeMat = new THREE.MeshBasicMaterial({ color: type.eyeColor });
             [-0.12, 0.12].forEach(xOffset => {
                 const eyeGeom = new THREE.SphereGeometry(0.06, 8, 8);
@@ -919,7 +932,6 @@
                 group.add(eye);
             });
 
-            // Arms
             [-0.5, 0.5].forEach(xOffset => {
                 const armGeom = new THREE.CylinderGeometry(0.1, 0.08, 0.7, 8);
                 const arm = new THREE.Mesh(armGeom, furMat);
@@ -927,59 +939,31 @@
                 arm.rotation.z = xOffset > 0 ? -0.5 : 0.5;
                 arm.rotation.x = 0.3;
                 group.add(arm);
-
-                // Claws
-                for (let i = 0; i < 3; i++) {
-                    const clawGeom = new THREE.ConeGeometry(0.02, 0.15, 4);
-                    const clawMat = new THREE.MeshStandardMaterial({ color: 0x222222 });
-                    const claw = new THREE.Mesh(clawGeom, clawMat);
-                    claw.position.set(xOffset * 1.3 + (i - 1) * 0.05, 0.4, 0.4);
-                    claw.rotation.x = Math.PI / 2 + 0.3;
-                    group.add(claw);
-                }
             });
 
-            // Legs
             [-0.25, 0.25].forEach(xOffset => {
                 const legGeom = new THREE.CylinderGeometry(0.12, 0.1, 0.8, 8);
                 const leg = new THREE.Mesh(legGeom, furMat);
                 leg.position.set(xOffset, 0.4, -0.1);
                 group.add(leg);
             });
-
-            // Tail
-            const tailGeom = new THREE.CylinderGeometry(0.05, 0.08, 0.5, 8);
-            const tail = new THREE.Mesh(tailGeom, furMat);
-            tail.position.set(0, 0.8, -0.5);
-            tail.rotation.x = 0.8;
-            group.add(tail);
         }
 
         function buildGriffin(group, type) {
-            const featherMat = new THREE.MeshStandardMaterial({
-                color: type.featherColor,
-                roughness: 0.7
-            });
-            const bodyMat = new THREE.MeshStandardMaterial({
-                color: type.color,
-                metalness: 0.3,
-                roughness: 0.5
-            });
+            const featherMat = new THREE.MeshStandardMaterial({ color: type.featherColor, roughness: 0.7 });
+            const bodyMat = new THREE.MeshStandardMaterial({ color: type.color, metalness: 0.3, roughness: 0.5 });
 
-            // Body (lion-like)
             const bodyGeom = new THREE.SphereGeometry(0.7, 16, 16);
             const body = new THREE.Mesh(bodyGeom, bodyMat);
             body.scale.set(1, 0.7, 1.3);
             body.position.y = 0.9;
             group.add(body);
 
-            // Eagle head
             const headGeom = new THREE.SphereGeometry(0.3, 16, 16);
             const head = new THREE.Mesh(headGeom, featherMat);
             head.position.set(0, 1.4, 0.6);
             group.add(head);
 
-            // Beak
             const beakGeom = new THREE.ConeGeometry(0.1, 0.35, 4);
             const beakMat = new THREE.MeshStandardMaterial({ color: 0xff8c00 });
             const beak = new THREE.Mesh(beakGeom, beakMat);
@@ -987,7 +971,6 @@
             beak.position.set(0, 1.35, 0.9);
             group.add(beak);
 
-            // Eyes
             const eyeMat = new THREE.MeshBasicMaterial({ color: type.eyeColor });
             [-0.12, 0.12].forEach(xOffset => {
                 const eyeGeom = new THREE.SphereGeometry(0.06, 8, 8);
@@ -996,105 +979,48 @@
                 group.add(eye);
             });
 
-            // Wings
             [-1, 1].forEach(side => {
-                const wingGroup = new THREE.Group();
-
-                // Main wing
                 const wingGeom = new THREE.BoxGeometry(1.2, 0.08, 0.6);
                 const wing = new THREE.Mesh(wingGeom, featherMat);
-                wing.position.x = side * 0.6;
-                wingGroup.add(wing);
-
-                // Feather details
-                for (let i = 0; i < 5; i++) {
-                    const featherGeom = new THREE.BoxGeometry(0.15, 0.03, 0.4 - i * 0.05);
-                    const feather = new THREE.Mesh(featherGeom, featherMat);
-                    feather.position.set(side * (0.2 + i * 0.2), -0.05, -0.1);
-                    wingGroup.add(feather);
-                }
-
-                wingGroup.position.set(side * 0.5, 1.1, 0);
-                wingGroup.rotation.z = side * 0.4;
-                wingGroup.rotation.x = 0.2;
-                group.add(wingGroup);
+                wing.position.set(side * 1.1, 1.1, 0);
+                wing.rotation.z = side * 0.4;
+                group.add(wing);
             });
 
-            // Front legs (eagle talons)
             [-0.3, 0.3].forEach(xOffset => {
-                const legGeom = new THREE.CylinderGeometry(0.06, 0.05, 0.5, 8);
-                const legMat = new THREE.MeshStandardMaterial({ color: 0xff8c00 });
-                const leg = new THREE.Mesh(legGeom, legMat);
-                leg.position.set(xOffset, 0.3, 0.4);
-                group.add(leg);
-            });
-
-            // Back legs (lion)
-            [-0.3, 0.3].forEach(xOffset => {
-                const legGeom = new THREE.CylinderGeometry(0.1, 0.08, 0.6, 8);
+                const legGeom = new THREE.CylinderGeometry(0.08, 0.06, 0.6, 8);
                 const leg = new THREE.Mesh(legGeom, bodyMat);
-                leg.position.set(xOffset, 0.3, -0.4);
+                leg.position.set(xOffset, 0.3, 0);
                 group.add(leg);
             });
-
-            // Tail
-            const tailGeom = new THREE.CylinderGeometry(0.04, 0.1, 0.8, 8);
-            const tail = new THREE.Mesh(tailGeom, bodyMat);
-            tail.position.set(0, 0.7, -0.9);
-            tail.rotation.x = 0.6;
-            group.add(tail);
-
-            // Tail tuft
-            const tuftGeom = new THREE.SphereGeometry(0.12, 8, 8);
-            const tuft = new THREE.Mesh(tuftGeom, bodyMat);
-            tuft.position.set(0, 0.5, -1.2);
-            group.add(tuft);
         }
 
         function buildGnome(group, type) {
-            const skinMat = new THREE.MeshStandardMaterial({
-                color: type.skinColor,
-                roughness: 0.8
-            });
-            const clothMat = new THREE.MeshStandardMaterial({
-                color: type.color,
-                roughness: 0.9
-            });
+            const skinMat = new THREE.MeshStandardMaterial({ color: type.skinColor, roughness: 0.8 });
+            const clothMat = new THREE.MeshStandardMaterial({ color: type.color, roughness: 0.9 });
 
-            // Body
             const bodyGeom = new THREE.SphereGeometry(0.35, 16, 16);
             const body = new THREE.Mesh(bodyGeom, clothMat);
             body.scale.set(1, 1.2, 0.9);
             body.position.y = 0.5;
             group.add(body);
 
-            // Head
             const headGeom = new THREE.SphereGeometry(0.25, 16, 16);
             const head = new THREE.Mesh(headGeom, skinMat);
             head.position.y = 1;
             group.add(head);
 
-            // Big nose
             const noseGeom = new THREE.SphereGeometry(0.1, 8, 8);
             const nose = new THREE.Mesh(noseGeom, skinMat);
             nose.position.set(0, 0.95, 0.25);
             group.add(nose);
 
-            // Hat
             const hatGeom = new THREE.ConeGeometry(0.25, 0.5, 8);
             const hatMat = new THREE.MeshStandardMaterial({ color: 0xcc0000 });
             const hat = new THREE.Mesh(hatGeom, hatMat);
             hat.position.y = 1.4;
-            hat.rotation.x = -0.1;
             group.add(hat);
 
-            // Hat brim
-            const brimGeom = new THREE.CylinderGeometry(0.28, 0.28, 0.05, 16);
-            const brim = new THREE.Mesh(brimGeom, hatMat);
-            brim.position.y = 1.15;
-            group.add(brim);
-
-            // Beard
             const beardGeom = new THREE.ConeGeometry(0.2, 0.4, 8);
             const beardMat = new THREE.MeshStandardMaterial({ color: 0xffffff });
             const beard = new THREE.Mesh(beardGeom, beardMat);
@@ -1102,251 +1028,75 @@
             beard.rotation.x = Math.PI;
             group.add(beard);
 
-            // Eyes
-            const eyeMat = new THREE.MeshBasicMaterial({ color: type.eyeColor });
-            [-0.08, 0.08].forEach(xOffset => {
-                const eyeGeom = new THREE.SphereGeometry(0.04, 8, 8);
-                const eye = new THREE.Mesh(eyeGeom, eyeMat);
-                eye.position.set(xOffset, 1.05, 0.2);
-                group.add(eye);
-            });
-
-            // Arms
-            [-0.35, 0.35].forEach(xOffset => {
-                const armGeom = new THREE.CylinderGeometry(0.06, 0.05, 0.3, 8);
-                const arm = new THREE.Mesh(armGeom, clothMat);
-                arm.position.set(xOffset, 0.5, 0);
-                arm.rotation.z = xOffset > 0 ? -0.8 : 0.8;
-                group.add(arm);
-
-                // Hand
-                const handGeom = new THREE.SphereGeometry(0.06, 8, 8);
-                const hand = new THREE.Mesh(handGeom, skinMat);
-                hand.position.set(xOffset * 1.4, 0.35, 0);
-                group.add(hand);
-            });
-
-            // Legs
-            [-0.12, 0.12].forEach(xOffset => {
-                const legGeom = new THREE.CylinderGeometry(0.08, 0.06, 0.25, 8);
-                const leg = new THREE.Mesh(legGeom, clothMat);
-                leg.position.set(xOffset, 0.12, 0);
-                group.add(leg);
-
-                // Boots
-                const bootGeom = new THREE.SphereGeometry(0.08, 8, 8);
-                const bootMat = new THREE.MeshStandardMaterial({ color: 0x4a3728 });
-                const boot = new THREE.Mesh(bootGeom, bootMat);
-                boot.scale.set(1, 0.6, 1.3);
-                boot.position.set(xOffset, 0.02, 0.03);
-                group.add(boot);
-            });
-
-            // Pickaxe
-            const handleGeom = new THREE.CylinderGeometry(0.03, 0.03, 0.5, 8);
-            const handleMat = new THREE.MeshStandardMaterial({ color: 0x4a3728 });
-            const handle = new THREE.Mesh(handleGeom, handleMat);
-            handle.position.set(0.5, 0.5, 0);
-            handle.rotation.z = 0.5;
-            group.add(handle);
-
-            const pickHeadGeom = new THREE.BoxGeometry(0.25, 0.06, 0.06);
-            const pickMat = new THREE.MeshStandardMaterial({ color: 0x888888, metalness: 0.8 });
-            const pickHead = new THREE.Mesh(pickHeadGeom, pickMat);
-            pickHead.position.set(0.65, 0.7, 0);
-            group.add(pickHead);
-
-            group.scale.setScalar(1.5); // Make gnome a bit bigger
+            group.scale.setScalar(1.5);
         }
 
         function buildDragon(group, type) {
-            const scaleMat = new THREE.MeshStandardMaterial({
-                color: type.scaleColor,
-                roughness: 0.6,
-                metalness: 0.2
-            });
-            const bodyMat = new THREE.MeshStandardMaterial({
-                color: type.color,
-                roughness: 0.5
-            });
+            const scaleMat = new THREE.MeshStandardMaterial({ color: type.scaleColor, roughness: 0.6, metalness: 0.2 });
+            const bodyMat = new THREE.MeshStandardMaterial({ color: type.color, roughness: 0.5 });
 
-            // Body
             const bodyGeom = new THREE.SphereGeometry(0.8, 16, 16);
             const body = new THREE.Mesh(bodyGeom, scaleMat);
             body.scale.set(1, 0.7, 1.4);
             body.position.y = 1.2;
             group.add(body);
 
-            // Neck
-            const neckGeom = new THREE.CylinderGeometry(0.25, 0.35, 0.6, 8);
-            const neck = new THREE.Mesh(neckGeom, scaleMat);
-            neck.position.set(0, 1.7, 0.5);
-            neck.rotation.x = 0.5;
-            group.add(neck);
-
-            // Head
             const headGeom = new THREE.SphereGeometry(0.35, 16, 16);
             const head = new THREE.Mesh(headGeom, scaleMat);
             head.scale.set(1, 0.8, 1.3);
-            head.position.set(0, 2, 0.9);
+            head.position.set(0, 1.8, 0.7);
             group.add(head);
 
-            // Snout
-            const snoutGeom = new THREE.BoxGeometry(0.25, 0.2, 0.4);
-            const snout = new THREE.Mesh(snoutGeom, scaleMat);
-            snout.position.set(0, 1.9, 1.3);
-            group.add(snout);
-
-            // Horns
             [-0.2, 0.2].forEach(xOffset => {
                 const hornGeom = new THREE.ConeGeometry(0.08, 0.4, 6);
                 const hornMat = new THREE.MeshStandardMaterial({ color: 0x222222 });
                 const horn = new THREE.Mesh(hornGeom, hornMat);
-                horn.position.set(xOffset, 2.35, 0.7);
+                horn.position.set(xOffset, 2.15, 0.5);
                 horn.rotation.x = -0.5;
-                horn.rotation.z = xOffset > 0 ? 0.3 : -0.3;
                 group.add(horn);
             });
 
-            // Eyes (glowing)
             const eyeMat = new THREE.MeshBasicMaterial({ color: type.eyeColor });
             [-0.15, 0.15].forEach(xOffset => {
                 const eyeGeom = new THREE.SphereGeometry(0.08, 8, 8);
                 const eye = new THREE.Mesh(eyeGeom, eyeMat);
-                eye.position.set(xOffset, 2.1, 1.15);
+                eye.position.set(xOffset, 1.9, 0.95);
                 group.add(eye);
             });
 
-            // Wings
             [-1, 1].forEach(side => {
-                const wingGroup = new THREE.Group();
-
-                // Wing membrane
-                const wingShape = new THREE.Shape();
-                wingShape.moveTo(0, 0);
-                wingShape.lineTo(1.5, 0.8);
-                wingShape.lineTo(1.8, 0.3);
-                wingShape.lineTo(1.5, -0.2);
-                wingShape.lineTo(0.8, -0.3);
-                wingShape.lineTo(0, 0);
-
-                const wingGeom = new THREE.ShapeGeometry(wingShape);
-                const wingMat = new THREE.MeshStandardMaterial({
-                    color: type.color,
-                    side: THREE.DoubleSide,
-                    transparent: true,
-                    opacity: 0.9
-                });
+                const wingGeom = new THREE.BoxGeometry(1.5, 0.05, 0.8);
+                const wingMat = new THREE.MeshStandardMaterial({ color: type.color, side: THREE.DoubleSide });
                 const wing = new THREE.Mesh(wingGeom, wingMat);
-                wing.rotation.y = side * Math.PI / 2;
-                wing.position.x = side * 0.3;
-                wingGroup.add(wing);
-
-                // Wing bones
-                for (let i = 0; i < 3; i++) {
-                    const boneGeom = new THREE.CylinderGeometry(0.03, 0.02, 1 + i * 0.3, 6);
-                    const bone = new THREE.Mesh(boneGeom, bodyMat);
-                    bone.position.set(side * (0.5 + i * 0.3), 0.3 - i * 0.1, 0);
-                    bone.rotation.z = side * (0.5 + i * 0.2);
-                    wingGroup.add(bone);
-                }
-
-                wingGroup.position.set(side * 0.6, 1.5, 0);
-                wingGroup.rotation.x = 0.3;
-                group.add(wingGroup);
+                wing.position.set(side * 1.2, 1.4, 0);
+                wing.rotation.z = side * 0.4;
+                group.add(wing);
             });
 
-            // Legs
-            [-0.4, 0.4].forEach(xOffset => {
-                const legGeom = new THREE.CylinderGeometry(0.15, 0.12, 0.8, 8);
-                const leg = new THREE.Mesh(legGeom, scaleMat);
-                leg.position.set(xOffset, 0.4, 0);
-                group.add(leg);
-
-                // Claws
-                for (let i = 0; i < 3; i++) {
-                    const clawGeom = new THREE.ConeGeometry(0.04, 0.2, 4);
-                    const clawMat = new THREE.MeshStandardMaterial({ color: 0x222222 });
-                    const claw = new THREE.Mesh(clawGeom, clawMat);
-                    claw.position.set(xOffset + (i - 1) * 0.08, 0.05, 0.15);
-                    claw.rotation.x = Math.PI / 2;
-                    group.add(claw);
-                }
-            });
-
-            // Tail
-            for (let i = 0; i < 6; i++) {
-                const tailGeom = new THREE.SphereGeometry(0.2 - i * 0.025, 8, 8);
-                const tail = new THREE.Mesh(tailGeom, scaleMat);
-                tail.position.set(0, 0.8 - i * 0.08, -0.6 - i * 0.25);
-                group.add(tail);
-            }
-
-            // Tail spike
-            const spikeGeom = new THREE.ConeGeometry(0.08, 0.3, 4);
-            const spike = new THREE.Mesh(spikeGeom, bodyMat);
-            spike.position.set(0, 0.35, -2);
-            spike.rotation.x = Math.PI / 2;
-            group.add(spike);
-
-            // Fire glow
             const fireLight = new THREE.PointLight(0xff4400, 2, 8);
-            fireLight.position.set(0, 1.9, 1.5);
+            fireLight.position.set(0, 1.8, 1.2);
             group.add(fireLight);
-
-            // Chest spikes
-            for (let i = 0; i < 4; i++) {
-                const spikeGeom = new THREE.ConeGeometry(0.05, 0.2, 4);
-                const spike = new THREE.Mesh(spikeGeom, bodyMat);
-                spike.position.set(0, 1.4 - i * 0.15, 0.7);
-                spike.rotation.x = -0.3;
-                group.add(spike);
-            }
         }
 
         function buildTroll(group, type) {
-            const skinMat = new THREE.MeshStandardMaterial({
-                color: type.skinColor,
-                roughness: 0.9
-            });
-            const bodyMat = new THREE.MeshStandardMaterial({
-                color: type.color,
-                roughness: 0.85
-            });
+            const skinMat = new THREE.MeshStandardMaterial({ color: type.skinColor, roughness: 0.9 });
 
-            // Large body
             const bodyGeom = new THREE.SphereGeometry(0.9, 16, 16);
             const body = new THREE.Mesh(bodyGeom, skinMat);
             body.scale.set(1, 1.1, 0.9);
             body.position.y = 1.3;
             group.add(body);
 
-            // Small head
             const headGeom = new THREE.SphereGeometry(0.35, 16, 16);
             const head = new THREE.Mesh(headGeom, skinMat);
             head.position.y = 2.3;
             group.add(head);
 
-            // Big nose
             const noseGeom = new THREE.SphereGeometry(0.15, 8, 8);
             const nose = new THREE.Mesh(noseGeom, skinMat);
             nose.position.set(0, 2.2, 0.35);
             group.add(nose);
 
-            // Warts
-            for (let i = 0; i < 5; i++) {
-                const wartGeom = new THREE.SphereGeometry(0.05 + Math.random() * 0.05, 6, 6);
-                const wartMat = new THREE.MeshStandardMaterial({ color: 0x3a4a3a });
-                const wart = new THREE.Mesh(wartGeom, wartMat);
-                wart.position.set(
-                    (Math.random() - 0.5) * 0.5,
-                    2.1 + Math.random() * 0.3,
-                    0.25 + Math.random() * 0.2
-                );
-                group.add(wart);
-            }
-
-            // Small eyes
             const eyeMat = new THREE.MeshBasicMaterial({ color: type.eyeColor });
             [-0.12, 0.12].forEach(xOffset => {
                 const eyeGeom = new THREE.SphereGeometry(0.06, 8, 8);
@@ -1355,152 +1105,60 @@
                 group.add(eye);
             });
 
-            // Ears
-            [-0.35, 0.35].forEach(xOffset => {
-                const earGeom = new THREE.SphereGeometry(0.12, 8, 8);
-                const ear = new THREE.Mesh(earGeom, skinMat);
-                ear.scale.set(0.6, 1, 0.4);
-                ear.position.set(xOffset, 2.3, 0);
-                group.add(ear);
-            });
-
-            // Tusks
-            [-0.1, 0.1].forEach(xOffset => {
-                const tuskGeom = new THREE.ConeGeometry(0.05, 0.2, 6);
-                const tuskMat = new THREE.MeshStandardMaterial({ color: 0xfffff0 });
-                const tusk = new THREE.Mesh(tuskGeom, tuskMat);
-                tusk.position.set(xOffset, 2.05, 0.3);
-                tusk.rotation.x = -0.3;
-                group.add(tusk);
-            });
-
-            // Massive arms
             [-0.8, 0.8].forEach(xOffset => {
-                // Upper arm
-                const upperArmGeom = new THREE.CylinderGeometry(0.2, 0.25, 0.8, 8);
-                const upperArm = new THREE.Mesh(upperArmGeom, skinMat);
-                upperArm.position.set(xOffset, 1.3, 0);
-                upperArm.rotation.z = xOffset > 0 ? -0.5 : 0.5;
-                group.add(upperArm);
-
-                // Lower arm
-                const lowerArmGeom = new THREE.CylinderGeometry(0.15, 0.2, 0.7, 8);
-                const lowerArm = new THREE.Mesh(lowerArmGeom, skinMat);
-                lowerArm.position.set(xOffset * 1.3, 0.7, 0.2);
-                lowerArm.rotation.x = 0.3;
-                group.add(lowerArm);
-
-                // Fist
-                const fistGeom = new THREE.SphereGeometry(0.18, 8, 8);
-                const fist = new THREE.Mesh(fistGeom, skinMat);
-                fist.position.set(xOffset * 1.4, 0.35, 0.35);
-                group.add(fist);
+                const armGeom = new THREE.CylinderGeometry(0.2, 0.15, 1, 8);
+                const arm = new THREE.Mesh(armGeom, skinMat);
+                arm.position.set(xOffset, 1, 0.2);
+                arm.rotation.z = xOffset > 0 ? -0.6 : 0.6;
+                group.add(arm);
             });
 
-            // Short legs
             [-0.35, 0.35].forEach(xOffset => {
                 const legGeom = new THREE.CylinderGeometry(0.2, 0.18, 0.6, 8);
                 const leg = new THREE.Mesh(legGeom, skinMat);
                 leg.position.set(xOffset, 0.3, 0);
                 group.add(leg);
-
-                // Foot
-                const footGeom = new THREE.SphereGeometry(0.2, 8, 8);
-                const foot = new THREE.Mesh(footGeom, skinMat);
-                foot.scale.set(1, 0.5, 1.3);
-                foot.position.set(xOffset, 0.05, 0.1);
-                group.add(foot);
             });
 
-            // Loincloth
-            const clothGeom = new THREE.BoxGeometry(0.8, 0.4, 0.3);
-            const clothMat = new THREE.MeshStandardMaterial({ color: 0x4a3728 });
-            const cloth = new THREE.Mesh(clothGeom, clothMat);
-            cloth.position.set(0, 0.7, 0.1);
-            group.add(cloth);
-
-            // Club
-            const clubHandleGeom = new THREE.CylinderGeometry(0.08, 0.1, 1.2, 8);
+            const clubGeom = new THREE.CylinderGeometry(0.08, 0.12, 1.2, 8);
             const clubMat = new THREE.MeshStandardMaterial({ color: 0x3d2817 });
-            const clubHandle = new THREE.Mesh(clubHandleGeom, clubMat);
-            clubHandle.position.set(1, 0.8, 0.4);
-            clubHandle.rotation.z = 0.3;
-            clubHandle.rotation.x = -0.2;
-            group.add(clubHandle);
-
-            const clubHeadGeom = new THREE.SphereGeometry(0.25, 8, 8);
-            const clubHead = new THREE.Mesh(clubHeadGeom, clubMat);
-            clubHead.scale.set(1, 1.3, 1);
-            clubHead.position.set(1.15, 1.5, 0.2);
-            group.add(clubHead);
-
-            // Spikes on club
-            for (let i = 0; i < 6; i++) {
-                const spikeGeom = new THREE.ConeGeometry(0.04, 0.15, 4);
-                const spikeMat = new THREE.MeshStandardMaterial({ color: 0x666666, metalness: 0.8 });
-                const spike = new THREE.Mesh(spikeGeom, spikeMat);
-                const angle = (i / 6) * Math.PI * 2;
-                spike.position.set(
-                    1.15 + Math.cos(angle) * 0.2,
-                    1.5 + Math.sin(angle) * 0.25,
-                    0.2
-                );
-                spike.rotation.z = angle;
-                group.add(spike);
-            }
+            const club = new THREE.Mesh(clubGeom, clubMat);
+            club.position.set(1.1, 0.8, 0.3);
+            club.rotation.z = 0.3;
+            group.add(club);
         }
 
         function buildWitch(group, type) {
-            const cloakMat = new THREE.MeshStandardMaterial({
-                color: type.cloakColor,
-                roughness: 0.9
-            });
-            const skinMat = new THREE.MeshStandardMaterial({
-                color: 0x98fb98, // Pale green skin
-                roughness: 0.7
-            });
+            const cloakMat = new THREE.MeshStandardMaterial({ color: type.cloakColor, roughness: 0.9 });
+            const skinMat = new THREE.MeshStandardMaterial({ color: 0x98fb98, roughness: 0.7 });
 
-            // Cloak body
             const cloakGeom = new THREE.ConeGeometry(0.5, 1.4, 8);
             const cloak = new THREE.Mesh(cloakGeom, cloakMat);
             cloak.position.y = 0.7;
             group.add(cloak);
 
-            // Head
             const headGeom = new THREE.SphereGeometry(0.25, 16, 16);
             const head = new THREE.Mesh(headGeom, skinMat);
             head.position.y = 1.55;
             group.add(head);
 
-            // Pointed chin
-            const chinGeom = new THREE.ConeGeometry(0.08, 0.15, 6);
-            const chin = new THREE.Mesh(chinGeom, skinMat);
-            chin.position.set(0, 1.35, 0.1);
-            chin.rotation.x = Math.PI;
-            group.add(chin);
-
-            // Hooked nose
             const noseGeom = new THREE.ConeGeometry(0.06, 0.2, 6);
             const nose = new THREE.Mesh(noseGeom, skinMat);
             nose.position.set(0, 1.5, 0.25);
             nose.rotation.x = Math.PI / 2 + 0.3;
             group.add(nose);
 
-            // Witch hat
             const hatGeom = new THREE.ConeGeometry(0.35, 0.8, 8);
             const hatMat = new THREE.MeshStandardMaterial({ color: 0x1a0a2e });
             const hat = new THREE.Mesh(hatGeom, hatMat);
             hat.position.y = 2;
-            hat.rotation.z = 0.15;
             group.add(hat);
 
-            // Hat brim
             const brimGeom = new THREE.CylinderGeometry(0.45, 0.5, 0.05, 16);
             const brim = new THREE.Mesh(brimGeom, hatMat);
             brim.position.y = 1.65;
             group.add(brim);
 
-            // Glowing eyes
             const eyeMat = new THREE.MeshBasicMaterial({ color: type.eyeColor });
             [-0.08, 0.08].forEach(xOffset => {
                 const eyeGeom = new THREE.SphereGeometry(0.04, 8, 8);
@@ -1509,115 +1167,114 @@
                 group.add(eye);
             });
 
-            // Arms
-            [-0.4, 0.4].forEach(xOffset => {
-                const armGeom = new THREE.CylinderGeometry(0.05, 0.06, 0.5, 8);
-                const arm = new THREE.Mesh(armGeom, cloakMat);
-                arm.position.set(xOffset, 1, 0.2);
-                arm.rotation.z = xOffset > 0 ? -0.8 : 0.8;
-                arm.rotation.x = -0.3;
-                group.add(arm);
-
-                // Bony hands
-                const handGeom = new THREE.SphereGeometry(0.06, 8, 8);
-                const hand = new THREE.Mesh(handGeom, skinMat);
-                hand.position.set(xOffset * 1.5, 0.75, 0.35);
-                group.add(hand);
-
-                // Fingers
-                for (let i = 0; i < 4; i++) {
-                    const fingerGeom = new THREE.CylinderGeometry(0.01, 0.015, 0.12, 4);
-                    const finger = new THREE.Mesh(fingerGeom, skinMat);
-                    finger.position.set(
-                        xOffset * 1.5 + (i - 1.5) * 0.025,
-                        0.68,
-                        0.4 + i * 0.02
-                    );
-                    finger.rotation.x = 0.5;
-                    group.add(finger);
-                }
-            });
-
-            // Broom
-            const broomHandleGeom = new THREE.CylinderGeometry(0.03, 0.03, 1.8, 8);
+            const broomGeom = new THREE.CylinderGeometry(0.03, 0.03, 1.8, 8);
             const broomMat = new THREE.MeshStandardMaterial({ color: 0x4a3728 });
-            const broomHandle = new THREE.Mesh(broomHandleGeom, broomMat);
-            broomHandle.position.set(0.5, 0.9, 0);
-            broomHandle.rotation.z = 0.2;
-            group.add(broomHandle);
+            const broom = new THREE.Mesh(broomGeom, broomMat);
+            broom.position.set(0.5, 0.9, 0);
+            broom.rotation.z = 0.2;
+            group.add(broom);
 
-            // Broom bristles
-            const bristleGeom = new THREE.ConeGeometry(0.15, 0.4, 8);
-            const bristleMat = new THREE.MeshStandardMaterial({ color: 0x8b7355 });
-            const bristles = new THREE.Mesh(bristleGeom, bristleMat);
-            bristles.position.set(0.35, 0.1, 0);
-            bristles.rotation.z = Math.PI + 0.2;
-            group.add(bristles);
-
-            // Magic aura
             const auraLight = new THREE.PointLight(0x9932cc, 1, 5);
             auraLight.position.set(0, 1.2, 0.3);
             group.add(auraLight);
-
-            // Floating sparkles
-            for (let i = 0; i < 5; i++) {
-                const sparkleGeom = new THREE.SphereGeometry(0.03, 6, 6);
-                const sparkleMat = new THREE.MeshBasicMaterial({ color: 0xda70d6 });
-                const sparkle = new THREE.Mesh(sparkleGeom, sparkleMat);
-                sparkle.position.set(
-                    (Math.random() - 0.5) * 0.8,
-                    1 + Math.random() * 0.8,
-                    (Math.random() - 0.5) * 0.5
-                );
-                sparkle.userData.phase = Math.random() * Math.PI * 2;
-                group.add(sparkle);
-            }
         }
 
         // ==================== CREATURE CLASS ====================
         class Creature {
-            constructor(position, lookAt, type, num1, num2) {
+            constructor(position, type, num1, num2) {
                 this.type = type;
                 this.num1 = num1;
                 this.num2 = num2;
                 this.answer = num1 * num2;
                 this.question = `${num1} × ${num2}`;
                 this.defeated = false;
+                this.id = Math.random().toString(36).substr(2, 9);
+
+                // Time management
+                const diff = difficulties[gameState.difficulty];
+                const timeReduction = Math.min(gameState.chapter * 150, diff.baseTime - diff.minTime);
+                this.maxTime = diff.baseTime - timeReduction;
+                this.timeLeft = this.maxTime;
 
                 this.group = new THREE.Group();
                 type.buildModel(this.group, type);
 
                 this.group.position.copy(position);
-                this.group.lookAt(lookAt);
+                this.group.lookAt(camera.position);
+
+                // Create 3D label above creature
+                this.createLabel();
 
                 scene.add(this.group);
-
                 this.animPhase = Math.random() * Math.PI * 2;
             }
 
+            createLabel() {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = 256;
+                canvas.height = 96;
+
+                // Background
+                ctx.fillStyle = 'rgba(30, 15, 8, 0.9)';
+                ctx.beginPath();
+                ctx.roundRect(4, 4, 248, 88, 12);
+                ctx.fill();
+
+                // Border
+                ctx.strokeStyle = '#DAA520';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.roundRect(4, 4, 248, 88, 12);
+                ctx.stroke();
+
+                // Question
+                ctx.font = 'bold 42px Arial';
+                ctx.fillStyle = '#7CFC00';
+                ctx.textAlign = 'center';
+                ctx.fillText(this.question + ' = ?', 128, 60);
+
+                const texture = new THREE.CanvasTexture(canvas);
+                const spriteMat = new THREE.SpriteMaterial({ map: texture, transparent: true });
+                this.label = new THREE.Sprite(spriteMat);
+                this.label.scale.set(3, 1.2, 1);
+                this.label.position.y = 3;
+                this.group.add(this.label);
+            }
+
             update(delta) {
-                if (this.defeated) return;
+                if (this.defeated) return false;
 
                 this.animPhase += delta * 3;
+                this.group.position.y = Math.sin(this.animPhase) * 0.05;
 
-                // Idle animation
-                this.group.position.y += Math.sin(this.animPhase) * 0.002;
-                this.group.rotation.y += Math.sin(this.animPhase * 0.5) * 0.005;
+                // Make label face camera
+                this.label.lookAt(camera.position);
+
+                // Update time
+                this.timeLeft -= delta * 1000;
+
+                if (this.timeLeft <= 0) {
+                    return true; // Time expired
+                }
+
+                return false;
             }
 
             defeat() {
                 this.defeated = true;
-
-                // Explosion particles
-                for (let i = 0; i < 30; i++) {
+                for (let i = 0; i < 25; i++) {
                     createExplosionParticle(this.group.position.clone(), this.type.color);
                 }
-
                 scene.remove(this.group);
             }
 
             remove() {
                 scene.remove(this.group);
+            }
+
+            getTimePercent() {
+                return (this.timeLeft / this.maxTime) * 100;
             }
         }
 
@@ -1637,244 +1294,136 @@
             particles.push(particle);
         }
 
-        // ==================== ENCOUNTER SYSTEM ====================
-        function createEncounter() {
-            const diff = difficulties[gameState.difficulty];
-            const maxNum = Math.min(diff.maxNumber, 3 + Math.floor(gameState.chapter / 2));
+        // ==================== SPAWN SYSTEM ====================
+        function spawnCreature() {
+            if (!gameState.isPlaying) return;
+            if (activeCreatures.length >= gameState.maxActiveCreatures) return;
 
-            // Number of creatures based on chapter
-            const numCreatures = Math.min(1 + Math.floor(gameState.chapter / 3), 3);
+            const problem = getNextProblem();
+            const typeIndex = Math.floor(Math.random() * Math.min(creatureTypes.length, 2 + Math.floor(gameState.chapter / 2)));
+            const type = creatureTypes[typeIndex];
 
-            const encounter = {
-                creatures: [],
-                currentIndex: 0,
-                active: true
-            };
-
-            // Get camera look direction
+            // Spawn position - in front and to the side
             const lookDir = new THREE.Vector3();
             camera.getWorldDirection(lookDir);
 
-            for (let i = 0; i < numCreatures; i++) {
-                const typeIndex = Math.floor(Math.random() * Math.min(creatureTypes.length, 2 + Math.floor(gameState.chapter / 2)));
-                const type = creatureTypes[typeIndex];
+            const offset = (activeCreatures.length - (gameState.maxActiveCreatures - 1) / 2) * 4;
+            const spawnPos = camera.position.clone();
+            spawnPos.add(lookDir.clone().multiplyScalar(8 + Math.random() * 3));
 
-                const num1 = Math.floor(Math.random() * (maxNum - 1)) + 2;
-                const num2 = Math.floor(Math.random() * (maxNum - 1)) + 2;
+            // Offset to the side
+            const right = new THREE.Vector3();
+            right.crossVectors(lookDir, new THREE.Vector3(0, 1, 0)).normalize();
+            spawnPos.add(right.clone().multiplyScalar(offset));
+            spawnPos.y = 0;
 
-                // Position creatures in front of camera with offset
-                const spawnPos = camera.position.clone();
-                spawnPos.add(lookDir.clone().multiplyScalar(6 + i * 2));
-                spawnPos.x += (i - (numCreatures - 1) / 2) * 3;
-                spawnPos.y = 0;
+            const creature = new Creature(spawnPos, type, problem.num1, problem.num2);
+            activeCreatures.push(creature);
 
-                const creature = new Creature(spawnPos, camera.position, type, num1, num2);
-                encounter.creatures.push(creature);
+            playSound('spawn');
+            updateCreatureDisplay();
+            updateCreatureCount();
+        }
+
+        function updateCreatureDisplay() {
+            const container = document.getElementById('activeCreatures');
+            container.innerHTML = activeCreatures.map(c => `
+                <div class="creature-card" data-id="${c.id}">
+                    <div class="name">${c.type.name}</div>
+                    <div class="question">${c.question}</div>
+                    <div class="timer">
+                        <div class="timer-fill ${c.getTimePercent() < 30 ? 'danger' : ''}"
+                             style="width: ${c.getTimePercent()}%"></div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateCreatureCount() {
+            document.getElementById('creatureNum').textContent = activeCreatures.length;
+        }
+
+        // ==================== GAME LOGIC ====================
+        function processAnswer(answer) {
+            if (!gameState.isPlaying || activeCreatures.length === 0) return;
+
+            // Find creature with matching answer (closest first by time)
+            let matchIndex = -1;
+            let lowestTime = Infinity;
+
+            for (let i = 0; i < activeCreatures.length; i++) {
+                const c = activeCreatures[i];
+                if (c.answer === answer && c.timeLeft < lowestTime) {
+                    matchIndex = i;
+                    lowestTime = c.timeLeft;
+                }
             }
 
-            return encounter;
-        }
-
-        function startEncounter(encounter) {
-            gameState.isInEncounter = true;
-            gameState.cameraMoving = false;
-            gameState.currentEncounter = encounter;
-
-            playSound('encounter');
-
-            // Show first creature
-            showCurrentCreature();
-            startEncounterTimer();
-            updateMultiCreatureDisplay();
-
-            document.getElementById('encounterDisplay').style.display = 'block';
-            document.getElementById('answerInput').focus();
-        }
-
-        function showCurrentCreature() {
-            const encounter = gameState.currentEncounter;
-            if (!encounter || encounter.currentIndex >= encounter.creatures.length) return;
-
-            const creature = encounter.creatures[encounter.currentIndex];
-
-            document.getElementById('creatureName').textContent = creature.type.name;
-            document.getElementById('creatureQuestion').textContent = creature.question + ' = ?';
-
-            // Camera look at creature
-            const targetLook = creature.group.position.clone();
-            targetLook.y = 1.5;
-
-            // Smooth camera turn
-            animateCameraLook(targetLook);
-        }
-
-        function animateCameraLook(target) {
-            const startQuat = camera.quaternion.clone();
-            camera.lookAt(target);
-            const endQuat = camera.quaternion.clone();
-            camera.quaternion.copy(startQuat);
-
-            let progress = 0;
-            const animate = () => {
-                progress += 0.08;
-                if (progress >= 1) {
-                    camera.quaternion.copy(endQuat);
-                    return;
-                }
-                camera.quaternion.slerpQuaternions(startQuat, endQuat, progress);
-                requestAnimationFrame(animate);
-            };
-            animate();
-        }
-
-        function startEncounterTimer() {
-            const diff = difficulties[gameState.difficulty];
-            const timeReduction = Math.min(gameState.chapter * 100, diff.baseTime - diff.minTime);
-            gameState.encounterMaxTime = diff.baseTime - timeReduction;
-            gameState.encounterTimeLeft = gameState.encounterMaxTime;
-
-            const timerBar = document.getElementById('timerBar');
-            timerBar.style.width = '100%';
-            timerBar.classList.remove('danger');
-
-            clearInterval(gameState.encounterTimer);
-            gameState.encounterTimer = setInterval(() => {
-                gameState.encounterTimeLeft -= 50;
-
-                const percent = (gameState.encounterTimeLeft / gameState.encounterMaxTime) * 100;
-                timerBar.style.width = percent + '%';
-
-                if (percent < 30) {
-                    timerBar.classList.add('danger');
-                    if (percent % 10 < 3) playSound('timeWarning');
-                }
-
-                if (gameState.encounterTimeLeft <= 0) {
-                    encounterTimeout();
-                }
-            }, 50);
-        }
-
-        function encounterTimeout() {
-            clearInterval(gameState.encounterTimer);
-
-            const creature = gameState.currentEncounter.creatures[gameState.currentEncounter.currentIndex];
-            creature.remove();
-
-            loseLife();
-            showFeedback('ZEIT!', 'wrong');
-
-            gameState.combo = 0;
-            updateCombo();
-
-            nextCreatureOrEndEncounter();
-        }
-
-        function processAnswer(answer) {
-            if (!gameState.isInEncounter || !gameState.currentEncounter) return;
-
-            const encounter = gameState.currentEncounter;
-            const creature = encounter.creatures[encounter.currentIndex];
-
-            if (answer === creature.answer) {
-                // Correct!
-                clearInterval(gameState.encounterTimer);
+            if (matchIndex >= 0) {
+                const creature = activeCreatures[matchIndex];
                 creature.defeat();
 
-                // Score based on time left
-                const timeBonus = Math.floor((gameState.encounterTimeLeft / gameState.encounterMaxTime) * 10);
+                // Score
+                const timeBonus = Math.floor((creature.timeLeft / creature.maxTime) * 15);
                 gameState.combo++;
                 const comboBonus = Math.floor(gameState.combo / 3) * 5;
                 const points = creature.type.points * gameState.chapter + timeBonus + comboBonus;
                 gameState.score += points;
 
-                gameState.totalEncounters++;
-                gameState.chapterEncounters++;
+                gameState.totalDefeated++;
+                gameState.chapterDefeated++;
+
+                activeCreatures.splice(matchIndex, 1);
 
                 updateUI();
                 updateCombo();
+                updateCreatureDisplay();
+                updateCreatureCount();
                 showFeedback('TREFFER!', 'correct');
                 playSound('correct');
 
-                nextCreatureOrEndEncounter();
+                // Chapter advancement
+                if (gameState.chapterDefeated >= 8 + gameState.chapter * 3) {
+                    advanceChapter();
+                }
             } else {
-                // Wrong answer
-                showFeedback('FALSCH!', 'wrong');
+                showFeedback('DANEBEN!', 'wrong');
                 playSound('wrong');
                 gameState.combo = 0;
                 updateCombo();
             }
         }
 
-        function nextCreatureOrEndEncounter() {
-            const encounter = gameState.currentEncounter;
-            encounter.currentIndex++;
+        function creatureExpired(creature) {
+            creature.remove();
+            const idx = activeCreatures.indexOf(creature);
+            if (idx >= 0) activeCreatures.splice(idx, 1);
 
-            if (encounter.currentIndex >= encounter.creatures.length) {
-                endEncounter();
-            } else {
-                showCurrentCreature();
-                startEncounterTimer();
-                updateMultiCreatureDisplay();
-            }
-        }
-
-        function endEncounter() {
-            clearInterval(gameState.encounterTimer);
-            gameState.isInEncounter = false;
-            gameState.cameraMoving = true;
-            gameState.currentEncounter = null;
-
-            document.getElementById('encounterDisplay').style.display = 'none';
-            document.getElementById('multiCreature').innerHTML = '';
-
-            // Check for chapter advancement
-            if (gameState.chapterEncounters >= 5 + gameState.chapter * 2) {
-                advanceChapter();
-            }
+            loseLife();
+            showFeedback('ZEIT!', 'wrong');
+            gameState.combo = 0;
+            updateCombo();
+            updateCreatureDisplay();
+            updateCreatureCount();
         }
 
         function advanceChapter() {
             gameState.chapter++;
-            gameState.chapterEncounters = 0;
+            gameState.chapterDefeated = 0;
+
+            // Increase max active creatures
+            gameState.maxActiveCreatures = Math.min(1 + Math.floor(gameState.chapter / 2), 4);
 
             playSound('chapter');
             announceChapter();
             updateUI();
         }
 
-        function announceChapter() {
-            const announce = document.getElementById('chapterAnnounce');
-            announce.textContent = `Kapitel ${gameState.chapter}`;
-            announce.classList.add('visible');
-            setTimeout(() => announce.classList.remove('visible'), 3000);
-        }
-
-        function updateMultiCreatureDisplay() {
-            const container = document.getElementById('multiCreature');
-            const encounter = gameState.currentEncounter;
-            if (!encounter || encounter.creatures.length <= 1) {
-                container.innerHTML = '';
-                return;
-            }
-
-            container.innerHTML = encounter.creatures.map((c, i) => `
-                <div class="mini-creature ${i === encounter.currentIndex ? 'active' : ''}"
-                     style="${c.defeated ? 'opacity: 0.3; text-decoration: line-through;' : ''}">
-                    <div class="name">${c.type.name}</div>
-                    <div class="answer">${c.question}</div>
-                </div>
-            `).join('');
-        }
-
-        // ==================== GAME FUNCTIONS ====================
         function loseLife() {
             gameState.lives--;
-
             const overlay = document.getElementById('damageOverlay');
             overlay.classList.add('active');
             setTimeout(() => overlay.classList.remove('active'), 400);
-
             updateUI();
 
             if (gameState.lives <= 0) {
@@ -1886,15 +1435,12 @@
             document.getElementById('score').textContent = gameState.score;
             document.getElementById('chapter').textContent = gameState.chapter;
             document.getElementById('highscore').textContent = gameState.highscore;
-
-            const livesEl = document.getElementById('lives');
-            livesEl.innerHTML = Array(gameState.lives).fill('<span class="heart">❤</span>').join('');
+            document.getElementById('lives').innerHTML = Array(gameState.lives).fill('<span class="heart">❤</span>').join('');
         }
 
         function updateCombo() {
             const comboEl = document.getElementById('comboDisplay');
             const countEl = document.getElementById('comboCount');
-
             if (gameState.combo >= 3) {
                 countEl.textContent = gameState.combo;
                 comboEl.classList.add('visible');
@@ -1910,10 +1456,16 @@
             setTimeout(() => feedback.className = '', 800);
         }
 
+        function announceChapter() {
+            const announce = document.getElementById('chapterAnnounce');
+            announce.textContent = `Kapitel ${gameState.chapter} - Bis zu ${gameState.maxActiveCreatures} Kreaturen!`;
+            announce.classList.add('visible');
+            setTimeout(() => announce.classList.remove('visible'), 3000);
+        }
+
         function handleSubmit() {
             const input = document.getElementById('answerInput');
             const value = parseInt(input.value);
-
             if (!isNaN(value)) {
                 processAnswer(value);
                 input.value = '';
@@ -1921,6 +1473,8 @@
         }
 
         function startGame() {
+            updateSelectedRows();
+            initProblemPool();
             init3D();
 
             document.getElementById('startScreen').style.display = 'none';
@@ -1930,11 +1484,13 @@
             gameState.lives = 5;
             gameState.chapter = 1;
             gameState.combo = 0;
-            gameState.totalEncounters = 0;
-            gameState.chapterEncounters = 0;
+            gameState.totalDefeated = 0;
+            gameState.chapterDefeated = 0;
             gameState.cameraMoving = true;
+            gameState.maxActiveCreatures = 1;
             currentPathIndex = 0;
             pathProgress = 0;
+            activeCreatures = [];
 
             updateUI();
             updateCombo();
@@ -1942,30 +1498,21 @@
 
             document.getElementById('answerInput').focus();
 
-            // Start the game loop
             lastTime = performance.now();
             animate();
 
-            // Schedule encounters
-            scheduleNextEncounter();
-        }
-
-        function scheduleNextEncounter() {
-            if (!gameState.isPlaying) return;
-
-            const delay = 3000 + Math.random() * 2000 - gameState.chapter * 200;
-            setTimeout(() => {
-                if (gameState.isPlaying && !gameState.isInEncounter) {
-                    const encounter = createEncounter();
-                    startEncounter(encounter);
+            // Spawn timer
+            const diff = difficulties[gameState.difficulty];
+            gameState.spawnTimer = setInterval(() => {
+                if (gameState.isPlaying) {
+                    spawnCreature();
                 }
-                scheduleNextEncounter();
-            }, Math.max(delay, 1500));
+            }, diff.spawnInterval - gameState.chapter * 100);
         }
 
         function gameOver() {
             gameState.isPlaying = false;
-            clearInterval(gameState.encounterTimer);
+            clearInterval(gameState.spawnTimer);
 
             if (gameState.score > gameState.highscore) {
                 gameState.highscore = gameState.score;
@@ -1990,34 +1537,41 @@
             const delta = (currentTime - lastTime) / 1000;
             lastTime = currentTime;
 
-            // Camera movement along path
+            // Camera movement
             if (gameState.cameraMoving && pathPoints.length > 0) {
-                pathProgress += delta * 0.3;
+                pathProgress += delta * 0.25;
 
                 if (pathProgress >= 1) {
                     pathProgress = 0;
                     currentPathIndex++;
-                    if (currentPathIndex >= pathPoints.length - 1) {
-                        currentPathIndex = 0;
-                    }
+                    if (currentPathIndex >= pathPoints.length - 1) currentPathIndex = 0;
                 }
 
                 const currentPoint = pathPoints[currentPathIndex];
                 const nextPoint = pathPoints[Math.min(currentPathIndex + 1, pathPoints.length - 1)];
-
                 camera.position.lerpVectors(currentPoint, nextPoint, pathProgress);
 
-                // Look ahead
                 const lookAheadIndex = Math.min(currentPathIndex + 3, pathPoints.length - 1);
                 const lookTarget = pathPoints[lookAheadIndex].clone();
                 lookTarget.y = 1.5;
 
-                // Smooth look
-                const targetQuat = new THREE.Quaternion();
                 const tempCam = camera.clone();
                 tempCam.lookAt(lookTarget);
-                targetQuat.copy(tempCam.quaternion);
-                camera.quaternion.slerp(targetQuat, 0.02);
+                camera.quaternion.slerp(tempCam.quaternion, 0.02);
+            }
+
+            // Update creatures
+            for (let i = activeCreatures.length - 1; i >= 0; i--) {
+                const creature = activeCreatures[i];
+                const expired = creature.update(delta);
+                if (expired) {
+                    creatureExpired(creature);
+                }
+            }
+
+            // Update creature display (timers)
+            if (activeCreatures.length > 0) {
+                updateCreatureDisplay();
             }
 
             // Update particles
@@ -2027,16 +1581,10 @@
                 p.velocity.y -= 0.015;
                 p.life -= 0.02;
                 p.scale.setScalar(p.life);
-
                 if (p.life <= 0) {
                     scene.remove(p);
                     particles.splice(i, 1);
                 }
-            }
-
-            // Update encounter creatures
-            if (gameState.currentEncounter) {
-                gameState.currentEncounter.creatures.forEach(c => c.update(delta));
             }
 
             // Flicker torches
@@ -2061,6 +1609,13 @@
                 document.querySelectorAll('.difficulty-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
                 gameState.difficulty = btn.dataset.difficulty;
+            });
+        });
+
+        document.querySelectorAll('.row-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                btn.classList.toggle('active');
+                updateSelectedRows();
             });
         });
 
