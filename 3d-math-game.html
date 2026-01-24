@@ -470,6 +470,65 @@
             z-index: 10;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
         }
+
+        /* Chapter progress bar */
+        #chapterProgress {
+            position: absolute;
+            top: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            z-index: 10;
+        }
+
+        #chapterProgress .progress-label {
+            font-size: 11px;
+            color: #8B7355;
+            text-align: center;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        #chapterProgress .progress-bar {
+            height: 8px;
+            background: rgba(0,0,0,0.5);
+            border-radius: 4px;
+            border: 1px solid #8B4513;
+            overflow: hidden;
+        }
+
+        #chapterProgress .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00CED1, #7CFC00);
+            border-radius: 4px;
+            transition: width 0.3s ease-out;
+            box-shadow: 0 0 10px rgba(124, 252, 0, 0.5);
+        }
+
+        /* Direction indicator */
+        #directionIndicator {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 60px;
+            color: #FF6B6B;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 25;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.8);
+        }
+
+        #directionIndicator.show {
+            animation: directionFlash 0.6s ease-out;
+        }
+
+        @keyframes directionFlash {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(2); }
+            30% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+        }
     </style>
 </head>
 <body>
@@ -496,6 +555,15 @@
 
     <div id="comboDisplay">COMBO x<span id="comboCount">0</span></div>
     <div id="creatureCount">Kreaturen: <span id="creatureNum">0</span></div>
+
+    <div id="chapterProgress">
+        <div class="progress-label">Kapitel-Fortschritt</div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="chapterProgressFill" style="width: 0%"></div>
+        </div>
+    </div>
+
+    <div id="directionIndicator"></div>
 
     <div id="chapterAnnounce"></div>
 
@@ -580,10 +648,12 @@
         // ==================== MATH PROBLEM POOL ====================
         let problemPool = [];
         let usedProblems = new Set();
+        let lastProblemKey = null;
 
         function initProblemPool() {
             problemPool = [];
             usedProblems.clear();
+            lastProblemKey = null;
 
             const selectedRows = gameState.selectedRows;
 
@@ -621,16 +691,27 @@
                 shuffleArray(problemPool);
             }
 
-            // Find unused problem
+            // Find unused problem that is NOT the same as last one
             for (const problem of problemPool) {
-                if (!usedProblems.has(problem.key)) {
+                if (!usedProblems.has(problem.key) && problem.key !== lastProblemKey) {
                     usedProblems.add(problem.key);
+                    lastProblemKey = problem.key;
                     return { num1: problem.num1, num2: problem.num2 };
                 }
             }
 
-            // Fallback
+            // Fallback: find any unused problem
+            for (const problem of problemPool) {
+                if (!usedProblems.has(problem.key)) {
+                    usedProblems.add(problem.key);
+                    lastProblemKey = problem.key;
+                    return { num1: problem.num1, num2: problem.num2 };
+                }
+            }
+
+            // Final fallback
             const idx = Math.floor(Math.random() * problemPool.length);
+            lastProblemKey = problemPool[idx].key;
             return { num1: problemPool[idx].num1, num2: problemPool[idx].num2 };
         }
 
@@ -655,10 +736,13 @@
         };
 
         const difficulties = {
-            easy: { baseTime: 8000, minTime: 4000, encounterInterval: 25 },
-            medium: { baseTime: 6000, minTime: 3000, encounterInterval: 20 },
-            hard: { baseTime: 4500, minTime: 2500, encounterInterval: 15 }
+            easy: { baseTime: 8000, minTime: 4000, minDistance: 8, maxDistance: 20, cameraSpeed: 0.6 },
+            medium: { baseTime: 6000, minTime: 3000, minDistance: 6, maxDistance: 16, cameraSpeed: 0.8 },
+            hard: { baseTime: 4500, minTime: 2500, minDistance: 4, maxDistance: 12, cameraSpeed: 1.0 }
         };
+
+        // Direction types for encounters
+        const encounterDirections = ['front', 'left', 'right', 'above', 'behind'];
 
         // ==================== CREATURE DEFINITIONS ====================
         const creatureTypes = [
@@ -1300,9 +1384,23 @@
         // ==================== ENCOUNTER SYSTEM (RAIL-SHOOTER) ====================
         function scheduleNextEncounter() {
             const diff = difficulties[gameState.difficulty];
-            // Random distance until next encounter (with some variation)
-            const baseInterval = diff.encounterInterval - gameState.chapter * 1.5;
-            gameState.nextEncounterDistance = gameState.distanceTraveled + Math.max(8, baseInterval + (Math.random() - 0.5) * 10);
+            // Highly variable distance until next encounter for surprise effect
+            const minDist = Math.max(3, diff.minDistance - gameState.chapter * 0.5);
+            const maxDist = Math.max(8, diff.maxDistance - gameState.chapter);
+            const randomDistance = minDist + Math.random() * (maxDist - minDist);
+
+            // Add extra randomness: sometimes very quick, sometimes longer wait
+            const surpriseFactor = Math.random();
+            let finalDistance = randomDistance;
+            if (surpriseFactor < 0.15) {
+                // 15% chance: very quick encounter
+                finalDistance = minDist * 0.5;
+            } else if (surpriseFactor > 0.9) {
+                // 10% chance: longer wait
+                finalDistance = maxDist * 1.3;
+            }
+
+            gameState.nextEncounterDistance = gameState.distanceTraveled + finalDistance;
         }
 
         function checkForEncounter() {
@@ -1313,35 +1411,95 @@
             }
         }
 
+        function getEncounterDirection() {
+            // Weight the directions: front most common, behind rarest
+            const rand = Math.random();
+            if (rand < 0.35) return 'front';
+            if (rand < 0.55) return 'left';
+            if (rand < 0.75) return 'right';
+            if (rand < 0.92) return 'above';
+            return 'behind'; // 8% chance
+        }
+
+        function showDirectionIndicator(direction) {
+            const indicator = document.getElementById('directionIndicator');
+            const arrows = {
+                'front': '⬆',
+                'left': '⬅',
+                'right': '➡',
+                'above': '⬆',
+                'behind': '⬇'
+            };
+            const labels = {
+                'front': 'VORNE!',
+                'left': 'LINKS!',
+                'right': 'RECHTS!',
+                'above': 'OBEN!',
+                'behind': 'HINTEN!'
+            };
+            indicator.textContent = labels[direction];
+            indicator.classList.remove('show');
+            void indicator.offsetWidth; // Force reflow
+            indicator.classList.add('show');
+        }
+
         function triggerEncounter() {
             gameState.isInEncounter = true;
             gameState.cameraMoving = false;
 
             playSound('spawn');
 
+            // Determine direction
+            const direction = getEncounterDirection();
+            showDirectionIndicator(direction);
+
             // Determine how many creatures to spawn
             const numCreatures = Math.min(gameState.maxActiveCreatures, 1 + Math.floor(gameState.chapter / 3));
 
-            // Get camera look direction for positioning
+            // Get camera vectors
             const lookDir = new THREE.Vector3();
             camera.getWorldDirection(lookDir);
+            const right = new THREE.Vector3();
+            right.crossVectors(lookDir, new THREE.Vector3(0, 1, 0)).normalize();
+            const up = new THREE.Vector3(0, 1, 0);
 
-            // Spawn creatures in front of camera
+            // Spawn creatures based on direction
             for (let i = 0; i < numCreatures; i++) {
                 const problem = getNextProblem();
                 const typeIndex = Math.floor(Math.random() * Math.min(creatureTypes.length, 2 + Math.floor(gameState.chapter / 2)));
                 const type = creatureTypes[typeIndex];
 
-                // Position: in front, spread out horizontally
-                const offset = (i - (numCreatures - 1) / 2) * 4;
                 const spawnPos = camera.position.clone();
-                spawnPos.add(lookDir.clone().multiplyScalar(8 + Math.random() * 2));
+                const spreadOffset = (i - (numCreatures - 1) / 2) * 3;
 
-                // Offset to the side
-                const right = new THREE.Vector3();
-                right.crossVectors(lookDir, new THREE.Vector3(0, 1, 0)).normalize();
-                spawnPos.add(right.clone().multiplyScalar(offset));
-                spawnPos.y = 0;
+                switch(direction) {
+                    case 'front':
+                        spawnPos.add(lookDir.clone().multiplyScalar(8 + Math.random() * 3));
+                        spawnPos.add(right.clone().multiplyScalar(spreadOffset));
+                        break;
+                    case 'left':
+                        spawnPos.add(right.clone().multiplyScalar(-8 - Math.random() * 2));
+                        spawnPos.add(lookDir.clone().multiplyScalar(2 + spreadOffset));
+                        break;
+                    case 'right':
+                        spawnPos.add(right.clone().multiplyScalar(8 + Math.random() * 2));
+                        spawnPos.add(lookDir.clone().multiplyScalar(2 + spreadOffset));
+                        break;
+                    case 'above':
+                        spawnPos.add(lookDir.clone().multiplyScalar(6 + Math.random() * 2));
+                        spawnPos.add(right.clone().multiplyScalar(spreadOffset));
+                        spawnPos.y += 4 + Math.random() * 2; // Higher up
+                        break;
+                    case 'behind':
+                        spawnPos.add(lookDir.clone().multiplyScalar(-6 - Math.random() * 2));
+                        spawnPos.add(right.clone().multiplyScalar(spreadOffset));
+                        break;
+                }
+
+                // Ground level for most, except flying creatures from above
+                if (direction !== 'above') {
+                    spawnPos.y = 0;
+                }
 
                 const creature = new Creature(spawnPos, type, problem.num1, problem.num2);
                 activeCreatures.push(creature);
@@ -1355,7 +1513,9 @@
                 const centerPos = new THREE.Vector3();
                 activeCreatures.forEach(c => centerPos.add(c.group.position));
                 centerPos.divideScalar(activeCreatures.length);
-                centerPos.y = 1.5;
+                if (direction !== 'above') {
+                    centerPos.y = 1.5;
+                }
                 animateCameraLook(centerPos);
             }
         }
@@ -1525,6 +1685,11 @@
             document.getElementById('chapter').textContent = gameState.chapter;
             document.getElementById('highscore').textContent = gameState.highscore;
             document.getElementById('lives').innerHTML = Array(gameState.lives).fill('<span class="heart">❤</span>').join('');
+
+            // Update chapter progress bar
+            const creaturesNeeded = 8 + gameState.chapter * 3;
+            const progressPercent = Math.min(100, (gameState.chapterDefeated / creaturesNeeded) * 100);
+            document.getElementById('chapterProgressFill').style.width = progressPercent + '%';
         }
 
         function updateCombo() {
@@ -1622,9 +1787,10 @@
             const delta = (currentTime - lastTime) / 1000;
             lastTime = currentTime;
 
-            // Camera movement (Rail-shooter style)
+            // Camera movement (Rail-shooter style) - speed from difficulty settings
             if (gameState.cameraMoving && pathPoints.length > 0 && !gameState.isInEncounter) {
-                const moveSpeed = delta * 0.3;
+                const diff = difficulties[gameState.difficulty];
+                const moveSpeed = delta * diff.cameraSpeed;
                 pathProgress += moveSpeed;
 
                 // Track distance for encounter triggering
