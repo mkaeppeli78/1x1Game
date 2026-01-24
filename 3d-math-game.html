@@ -644,17 +644,20 @@
             combo: 0,
             highscore: parseInt(localStorage.getItem('mathGame3DHighscore') || '0'),
             cameraMoving: true,
+            isInEncounter: false,
             totalDefeated: 0,
             chapterDefeated: 0,
             selectedRows: [2, 3, 4, 5, 6, 7, 8, 9, 10],
             maxActiveCreatures: 1,
-            spawnTimer: null
+            encounterScheduleTimer: null,
+            nextEncounterDistance: 0,
+            distanceTraveled: 0
         };
 
         const difficulties = {
-            easy: { baseTime: 8000, minTime: 4000, spawnInterval: 4000 },
-            medium: { baseTime: 6000, minTime: 3000, spawnInterval: 3000 },
-            hard: { baseTime: 4500, minTime: 2500, spawnInterval: 2500 }
+            easy: { baseTime: 8000, minTime: 4000, encounterInterval: 25 },
+            medium: { baseTime: 6000, minTime: 3000, encounterInterval: 20 },
+            hard: { baseTime: 4500, minTime: 2500, encounterInterval: 15 }
         };
 
         // ==================== CREATURE DEFINITIONS ====================
@@ -1294,35 +1297,111 @@
             particles.push(particle);
         }
 
-        // ==================== SPAWN SYSTEM ====================
-        function spawnCreature() {
-            if (!gameState.isPlaying) return;
-            if (activeCreatures.length >= gameState.maxActiveCreatures) return;
+        // ==================== ENCOUNTER SYSTEM (RAIL-SHOOTER) ====================
+        function scheduleNextEncounter() {
+            const diff = difficulties[gameState.difficulty];
+            // Random distance until next encounter (with some variation)
+            const baseInterval = diff.encounterInterval - gameState.chapter * 1.5;
+            gameState.nextEncounterDistance = gameState.distanceTraveled + Math.max(8, baseInterval + (Math.random() - 0.5) * 10);
+        }
 
-            const problem = getNextProblem();
-            const typeIndex = Math.floor(Math.random() * Math.min(creatureTypes.length, 2 + Math.floor(gameState.chapter / 2)));
-            const type = creatureTypes[typeIndex];
+        function checkForEncounter() {
+            if (!gameState.isPlaying || gameState.isInEncounter) return;
 
-            // Spawn position - in front and to the side
+            if (gameState.distanceTraveled >= gameState.nextEncounterDistance) {
+                triggerEncounter();
+            }
+        }
+
+        function triggerEncounter() {
+            gameState.isInEncounter = true;
+            gameState.cameraMoving = false;
+
+            playSound('spawn');
+
+            // Determine how many creatures to spawn
+            const numCreatures = Math.min(gameState.maxActiveCreatures, 1 + Math.floor(gameState.chapter / 3));
+
+            // Get camera look direction for positioning
             const lookDir = new THREE.Vector3();
             camera.getWorldDirection(lookDir);
 
-            const offset = (activeCreatures.length - (gameState.maxActiveCreatures - 1) / 2) * 4;
-            const spawnPos = camera.position.clone();
-            spawnPos.add(lookDir.clone().multiplyScalar(8 + Math.random() * 3));
+            // Spawn creatures in front of camera
+            for (let i = 0; i < numCreatures; i++) {
+                const problem = getNextProblem();
+                const typeIndex = Math.floor(Math.random() * Math.min(creatureTypes.length, 2 + Math.floor(gameState.chapter / 2)));
+                const type = creatureTypes[typeIndex];
 
-            // Offset to the side
-            const right = new THREE.Vector3();
-            right.crossVectors(lookDir, new THREE.Vector3(0, 1, 0)).normalize();
-            spawnPos.add(right.clone().multiplyScalar(offset));
-            spawnPos.y = 0;
+                // Position: in front, spread out horizontally
+                const offset = (i - (numCreatures - 1) / 2) * 4;
+                const spawnPos = camera.position.clone();
+                spawnPos.add(lookDir.clone().multiplyScalar(8 + Math.random() * 2));
 
-            const creature = new Creature(spawnPos, type, problem.num1, problem.num2);
-            activeCreatures.push(creature);
+                // Offset to the side
+                const right = new THREE.Vector3();
+                right.crossVectors(lookDir, new THREE.Vector3(0, 1, 0)).normalize();
+                spawnPos.add(right.clone().multiplyScalar(offset));
+                spawnPos.y = 0;
 
-            playSound('spawn');
+                const creature = new Creature(spawnPos, type, problem.num1, problem.num2);
+                activeCreatures.push(creature);
+            }
+
             updateCreatureDisplay();
             updateCreatureCount();
+
+            // Animate camera to look at center of creatures
+            if (activeCreatures.length > 0) {
+                const centerPos = new THREE.Vector3();
+                activeCreatures.forEach(c => centerPos.add(c.group.position));
+                centerPos.divideScalar(activeCreatures.length);
+                centerPos.y = 1.5;
+                animateCameraLook(centerPos);
+            }
+        }
+
+        function animateCameraLook(target) {
+            const startQuat = camera.quaternion.clone();
+            const tempCam = camera.clone();
+            tempCam.lookAt(target);
+            const endQuat = tempCam.quaternion.clone();
+
+            let progress = 0;
+            const animateLook = () => {
+                if (!gameState.isPlaying) return;
+
+                progress += 0.05;
+                if (progress >= 1) {
+                    camera.quaternion.copy(endQuat);
+                    return;
+                }
+                camera.quaternion.slerpQuaternions(startQuat, endQuat, easeOutCubic(progress));
+                requestAnimationFrame(animateLook);
+            };
+            animateLook();
+        }
+
+        function easeOutCubic(t) {
+            return 1 - Math.pow(1 - t, 3);
+        }
+
+        function endEncounter() {
+            gameState.isInEncounter = false;
+            gameState.cameraMoving = true;
+            scheduleNextEncounter();
+
+            // Brief pause before camera moves again
+            setTimeout(() => {
+                if (gameState.isPlaying && !gameState.isInEncounter) {
+                    // Smoothly look back to path direction
+                    if (pathPoints.length > 0) {
+                        const lookAheadIndex = Math.min(currentPathIndex + 5, pathPoints.length - 1);
+                        const lookTarget = pathPoints[lookAheadIndex].clone();
+                        lookTarget.y = 1.5;
+                        animateCameraLook(lookTarget);
+                    }
+                }
+            }, 500);
         }
 
         function updateCreatureDisplay() {
@@ -1382,6 +1461,11 @@
                 showFeedback('TREFFER!', 'correct');
                 playSound('correct');
 
+                // Check if encounter is over (all creatures defeated)
+                if (activeCreatures.length === 0 && gameState.isInEncounter) {
+                    endEncounter();
+                }
+
                 // Chapter advancement
                 if (gameState.chapterDefeated >= 8 + gameState.chapter * 3) {
                     advanceChapter();
@@ -1405,6 +1489,11 @@
             updateCombo();
             updateCreatureDisplay();
             updateCreatureCount();
+
+            // Check if encounter is over (all creatures gone)
+            if (activeCreatures.length === 0 && gameState.isInEncounter) {
+                endEncounter();
+            }
         }
 
         function advanceChapter() {
@@ -1487,7 +1576,9 @@
             gameState.totalDefeated = 0;
             gameState.chapterDefeated = 0;
             gameState.cameraMoving = true;
+            gameState.isInEncounter = false;
             gameState.maxActiveCreatures = 1;
+            gameState.distanceTraveled = 0;
             currentPathIndex = 0;
             pathProgress = 0;
             activeCreatures = [];
@@ -1498,21 +1589,15 @@
 
             document.getElementById('answerInput').focus();
 
+            // Schedule first encounter
+            scheduleNextEncounter();
+
             lastTime = performance.now();
             animate();
-
-            // Spawn timer
-            const diff = difficulties[gameState.difficulty];
-            gameState.spawnTimer = setInterval(() => {
-                if (gameState.isPlaying) {
-                    spawnCreature();
-                }
-            }, diff.spawnInterval - gameState.chapter * 100);
         }
 
         function gameOver() {
             gameState.isPlaying = false;
-            clearInterval(gameState.spawnTimer);
 
             if (gameState.score > gameState.highscore) {
                 gameState.highscore = gameState.score;
@@ -1537,9 +1622,13 @@
             const delta = (currentTime - lastTime) / 1000;
             lastTime = currentTime;
 
-            // Camera movement
-            if (gameState.cameraMoving && pathPoints.length > 0) {
-                pathProgress += delta * 0.25;
+            // Camera movement (Rail-shooter style)
+            if (gameState.cameraMoving && pathPoints.length > 0 && !gameState.isInEncounter) {
+                const moveSpeed = delta * 0.3;
+                pathProgress += moveSpeed;
+
+                // Track distance for encounter triggering
+                gameState.distanceTraveled += moveSpeed * 5;
 
                 if (pathProgress >= 1) {
                     pathProgress = 0;
@@ -1551,13 +1640,19 @@
                 const nextPoint = pathPoints[Math.min(currentPathIndex + 1, pathPoints.length - 1)];
                 camera.position.lerpVectors(currentPoint, nextPoint, pathProgress);
 
-                const lookAheadIndex = Math.min(currentPathIndex + 3, pathPoints.length - 1);
-                const lookTarget = pathPoints[lookAheadIndex].clone();
-                lookTarget.y = 1.5;
+                // Only auto-look ahead when not in encounter transition
+                if (!gameState.isInEncounter) {
+                    const lookAheadIndex = Math.min(currentPathIndex + 3, pathPoints.length - 1);
+                    const lookTarget = pathPoints[lookAheadIndex].clone();
+                    lookTarget.y = 1.5;
 
-                const tempCam = camera.clone();
-                tempCam.lookAt(lookTarget);
-                camera.quaternion.slerp(tempCam.quaternion, 0.02);
+                    const tempCam = camera.clone();
+                    tempCam.lookAt(lookTarget);
+                    camera.quaternion.slerp(tempCam.quaternion, 0.03);
+                }
+
+                // Check for encounter
+                checkForEncounter();
             }
 
             // Update creatures
