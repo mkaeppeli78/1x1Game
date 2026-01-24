@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fabelwesen Mathe-Abwehr 3D</title>
+    <title>Fabelwesen Mathe-Abwehr 3D - Typing of the Dead Style</title>
     <style>
         * {
             margin: 0;
@@ -26,289 +26,133 @@
             top: 0;
             left: 0;
             right: 0;
-            padding: 15px 25px;
-            background: linear-gradient(to bottom, rgba(20, 10, 30, 0.95), rgba(40, 20, 60, 0.85));
+            padding: 12px 25px;
+            background: linear-gradient(to bottom, rgba(10, 5, 15, 0.9), rgba(20, 10, 25, 0.7));
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
             z-index: 10;
-            border-bottom: 3px solid #8B4513;
+            border-bottom: 2px solid #8B4513;
         }
 
         .stat-group {
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-width: 120px;
+            min-width: 100px;
         }
 
         .stat {
-            font-size: 28px;
+            font-size: 24px;
             font-weight: bold;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.8), 0 0 10px currentColor;
         }
 
         .stat-label {
-            font-size: 12px;
-            color: #c9a86c;
+            font-size: 11px;
+            color: #8B7355;
             text-transform: uppercase;
             letter-spacing: 2px;
-            margin-bottom: 5px;
+            margin-bottom: 3px;
         }
 
         #score { color: #FFD700; }
-        #highscore { color: #FFA500; }
+        #highscore { color: #CD853F; }
         #lives { color: #FF4444; }
-        #level { color: #7CFC00; }
-        #wave { color: #00CED1; }
+        #chapter { color: #00CED1; }
 
+        /* Input at bottom - compact */
         #inputContainer {
             position: absolute;
-            bottom: 30px;
+            bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
-            gap: 12px;
+            gap: 10px;
             z-index: 10;
-            background: linear-gradient(145deg, rgba(60, 40, 20, 0.95), rgba(40, 25, 15, 0.95));
-            padding: 20px 25px;
-            border-radius: 15px;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1);
-            border: 3px solid #8B4513;
+            background: linear-gradient(145deg, rgba(40, 25, 15, 0.95), rgba(25, 15, 8, 0.95));
+            padding: 12px 18px;
+            border-radius: 12px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.6);
+            border: 2px solid #8B4513;
         }
 
         #answerInput {
-            width: 200px;
-            padding: 18px;
-            font-size: 28px;
-            border: 3px solid #8B4513;
-            border-radius: 10px;
+            width: 140px;
+            padding: 12px;
+            font-size: 24px;
+            border: 2px solid #8B4513;
+            border-radius: 8px;
             text-align: center;
-            font-family: 'Segoe UI', sans-serif;
             font-weight: bold;
             background: rgba(255, 245, 220, 0.95);
             color: #3d2817;
-            transition: all 0.3s;
+            transition: all 0.2s;
         }
 
         #answerInput:focus {
             outline: none;
-            border-color: #DAA520;
-            box-shadow: 0 0 20px rgba(218, 165, 32, 0.5), inset 0 0 10px rgba(218, 165, 32, 0.2);
-            transform: scale(1.02);
+            border-color: #FFD700;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
         }
 
         #submitButton {
-            padding: 18px 35px;
-            font-size: 32px;
+            padding: 12px 20px;
+            font-size: 20px;
             background: linear-gradient(145deg, #8B4513, #654321);
             border: 2px solid #DAA520;
-            border-radius: 10px;
+            border-radius: 8px;
             color: #FFD700;
             cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(139, 69, 19, 0.5);
+            transition: all 0.2s;
+            font-weight: bold;
         }
 
         #submitButton:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 25px rgba(218, 165, 32, 0.6);
-            background: linear-gradient(145deg, #A0522D, #8B4513);
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(218, 165, 32, 0.5);
         }
 
+        /* Feedback */
         #feedback {
             position: absolute;
-            top: 50%;
+            top: 30%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 100px;
+            font-size: 70px;
             font-weight: bold;
             opacity: 0;
             pointer-events: none;
             z-index: 100;
-            text-shadow: 4px 4px 8px rgba(0,0,0,0.8), 0 0 30px currentColor;
+            text-shadow: 4px 4px 8px rgba(0,0,0,0.8), 0 0 40px currentColor;
         }
 
         #feedback.correct {
             color: #7CFC00;
-            animation: feedbackAnim 1.2s;
+            animation: hitAnim 0.8s ease-out;
         }
 
         #feedback.wrong {
             color: #FF4444;
-            animation: shakeAnim 0.6s;
+            animation: missAnim 0.5s ease-out;
         }
 
-        @keyframes feedbackAnim {
-            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.3) rotate(-10deg); }
-            30% { opacity: 1; transform: translate(-50%, -50%) scale(1.5) rotate(5deg); }
-            100% { opacity: 0; transform: translate(-50%, -50%) scale(1) rotate(0deg) translateY(-50px); }
+        @keyframes hitAnim {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+            20% { opacity: 1; transform: translate(-50%, -50%) scale(1.3); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(1) translateY(-30px); }
         }
 
-        @keyframes shakeAnim {
+        @keyframes missAnim {
             0%, 100% { transform: translate(-50%, -50%); opacity: 1; }
-            10%, 30%, 50%, 70%, 90% { transform: translate(-55%, -50%); }
-            20%, 40%, 60%, 80% { transform: translate(-45%, -50%); }
+            20% { transform: translate(-45%, -50%); }
+            40% { transform: translate(-55%, -50%); }
+            60% { transform: translate(-48%, -50%); }
+            80% { transform: translate(-52%, -50%); opacity: 0.5; }
+            100% { opacity: 0; }
         }
 
-        #startScreen, #gameOverScreen {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(ellipse at center, rgba(30, 15, 45, 0.95) 0%, rgba(10, 5, 15, 0.98) 100%);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            color: white;
-        }
-
-        .screen-panel {
-            background: linear-gradient(135deg, rgba(60, 40, 20, 0.9), rgba(40, 25, 15, 0.95));
-            padding: 50px 60px;
-            border-radius: 20px;
-            border: 4px solid #8B4513;
-            box-shadow: 0 15px 50px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.1), 0 0 60px rgba(139, 69, 19, 0.3);
-            max-width: 750px;
-            text-align: center;
-        }
-
-        .screen-panel h1 {
-            font-size: 52px;
-            margin-bottom: 25px;
-            color: #FFD700;
-            text-shadow: 3px 3px 6px rgba(0,0,0,0.8), 0 0 30px rgba(255, 215, 0, 0.5);
-            animation: titleGlow 3s ease-in-out infinite;
-        }
-
-        @keyframes titleGlow {
-            0%, 100% { text-shadow: 3px 3px 6px rgba(0,0,0,0.8), 0 0 30px rgba(255, 215, 0, 0.5); }
-            50% { text-shadow: 3px 3px 6px rgba(0,0,0,0.8), 0 0 50px rgba(255, 215, 0, 0.8); }
-        }
-
-        .screen-panel p {
-            font-size: 17px;
-            margin-bottom: 25px;
-            color: #c9a86c;
-            line-height: 1.9;
-        }
-
-        .creature-preview {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            margin: 25px 0;
-        }
-
-        .creature-icon {
-            font-size: 50px;
-            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
-            animation: creatureFloat 2s ease-in-out infinite;
-        }
-
-        .creature-icon:nth-child(2) { animation-delay: 0.3s; }
-        .creature-icon:nth-child(3) { animation-delay: 0.6s; }
-        .creature-icon:nth-child(4) { animation-delay: 0.9s; }
-
-        @keyframes creatureFloat {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
-        .button {
-            padding: 20px 50px;
-            font-size: 26px;
-            background: linear-gradient(145deg, #8B4513, #654321);
-            border: 3px solid #DAA520;
-            border-radius: 12px;
-            color: #FFD700;
-            cursor: pointer;
-            box-shadow: 0 8px 25px rgba(139, 69, 19, 0.5);
-            transition: all 0.3s;
-            font-family: 'Segoe UI', sans-serif;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        .button:hover {
-            transform: scale(1.08) translateY(-3px);
-            box-shadow: 0 12px 35px rgba(218, 165, 32, 0.6);
-            background: linear-gradient(145deg, #A0522D, #8B4513);
-        }
-
-        .difficulty-selector {
-            display: flex;
-            gap: 15px;
-            margin: 25px 0;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .difficulty-btn {
-            padding: 14px 28px;
-            font-size: 16px;
-            border: 2px solid #8B4513;
-            background: rgba(60, 40, 20, 0.8);
-            color: #c9a86c;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .difficulty-btn:hover {
-            background: rgba(80, 50, 25, 0.9);
-            transform: scale(1.05);
-        }
-
-        .difficulty-btn.active {
-            background: linear-gradient(145deg, #DAA520, #B8860B);
-            border-color: #FFD700;
-            color: #3d2817;
-            font-weight: bold;
-            box-shadow: 0 0 15px rgba(218, 165, 32, 0.5);
-        }
-
-        .combo {
-            position: absolute;
-            top: 100px;
-            right: 30px;
-            font-size: 32px;
-            font-weight: bold;
-            color: #FFD700;
-            text-shadow: 3px 3px 6px rgba(0,0,0,0.8), 0 0 20px rgba(255, 215, 0, 0.5);
-            opacity: 0;
-            transition: opacity 0.3s;
-            z-index: 10;
-        }
-
-        .combo.visible {
-            opacity: 1;
-            animation: comboPulse 0.5s ease-out;
-        }
-
-        @keyframes comboPulse {
-            0% { transform: scale(1.3); }
-            100% { transform: scale(1); }
-        }
-
-        .stats-row {
-            display: flex;
-            gap: 40px;
-            justify-content: center;
-            margin-bottom: 20px;
-            font-size: 22px;
-            color: #c9a86c;
-        }
-
-        .stats-row span {
-            color: #FFD700;
-        }
-
+        /* Damage overlay */
         #damageOverlay {
             position: fixed;
             top: 0;
@@ -318,66 +162,372 @@
             pointer-events: none;
             z-index: 50;
             opacity: 0;
-            background: radial-gradient(ellipse at center, transparent 0%, rgba(255, 0, 0, 0.4) 100%);
-            transition: opacity 0.1s;
+            background: radial-gradient(ellipse at center, transparent 30%, rgba(180, 0, 0, 0.6) 100%);
         }
 
         #damageOverlay.active {
-            opacity: 1;
-            animation: damageFlash 0.3s ease-out;
+            animation: damageFlash 0.4s ease-out;
         }
 
         @keyframes damageFlash {
-            0% { opacity: 0.8; }
+            0% { opacity: 0.9; }
             100% { opacity: 0; }
+        }
+
+        /* Screens */
+        #startScreen, #gameOverScreen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, rgba(25, 12, 35, 0.97) 0%, rgba(5, 2, 8, 0.99) 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            color: white;
+            overflow-y: auto;
+        }
+
+        .screen-panel {
+            background: linear-gradient(135deg, rgba(50, 30, 15, 0.95), rgba(30, 18, 8, 0.95));
+            padding: 35px 45px;
+            border-radius: 15px;
+            border: 3px solid #8B4513;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.8), 0 0 60px rgba(139, 69, 19, 0.3);
+            max-width: 800px;
+            text-align: center;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .screen-panel h1 {
+            font-size: 38px;
+            margin-bottom: 15px;
+            color: #FFD700;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.8), 0 0 30px rgba(255, 215, 0, 0.4);
+        }
+
+        .screen-panel p {
+            font-size: 15px;
+            margin-bottom: 15px;
+            color: #c9a86c;
+            line-height: 1.7;
+        }
+
+        .button {
+            padding: 16px 40px;
+            font-size: 20px;
+            background: linear-gradient(145deg, #8B4513, #654321);
+            border: 3px solid #DAA520;
+            border-radius: 10px;
+            color: #FFD700;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(139, 69, 19, 0.5);
+            transition: all 0.3s;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .button:hover {
+            transform: scale(1.05) translateY(-2px);
+            box-shadow: 0 12px 35px rgba(218, 165, 32, 0.5);
+        }
+
+        .difficulty-selector {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+            justify-content: center;
+        }
+
+        .difficulty-btn {
+            padding: 10px 20px;
+            font-size: 14px;
+            border: 2px solid #8B4513;
+            background: rgba(50, 30, 15, 0.8);
+            color: #c9a86c;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .difficulty-btn:hover {
+            background: rgba(70, 40, 20, 0.9);
+        }
+
+        .difficulty-btn.active {
+            background: linear-gradient(145deg, #DAA520, #B8860B);
+            border-color: #FFD700;
+            color: #3d2817;
+            font-weight: bold;
+        }
+
+        /* Number row selector */
+        .row-selector {
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            border: 1px solid #8B4513;
+        }
+
+        .row-selector h3 {
+            color: #FFD700;
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+
+        .row-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .row-btn {
+            width: 50px;
+            height: 50px;
+            border: 2px solid #8B4513;
+            background: rgba(50, 30, 15, 0.8);
+            color: #c9a86c;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .row-btn:hover {
+            background: rgba(70, 40, 20, 0.9);
+            transform: scale(1.05);
+        }
+
+        .row-btn.active {
+            background: linear-gradient(145deg, #4CAF50, #388E3C);
+            border-color: #7CFC00;
+            color: white;
+            box-shadow: 0 0 10px rgba(124, 252, 0, 0.4);
+        }
+
+        .row-presets {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 12px;
+        }
+
+        .preset-btn {
+            padding: 8px 16px;
+            font-size: 12px;
+            border: 1px solid #8B4513;
+            background: rgba(80, 50, 25, 0.8);
+            color: #c9a86c;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .preset-btn:hover {
+            background: rgba(100, 60, 30, 0.9);
+            color: #FFD700;
+        }
+
+        /* Combo display */
+        #comboDisplay {
+            position: absolute;
+            top: 80px;
+            right: 25px;
+            font-size: 28px;
+            font-weight: bold;
+            color: #FFD700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8), 0 0 15px rgba(255, 215, 0, 0.5);
+            opacity: 0;
+            z-index: 10;
+            transition: opacity 0.3s;
+        }
+
+        #comboDisplay.visible {
+            opacity: 1;
+        }
+
+        /* Chapter announcement */
+        #chapterAnnounce {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 36px;
+            color: #FFD700;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.9), 0 0 30px rgba(255, 215, 0, 0.5);
+            z-index: 30;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #chapterAnnounce.visible {
+            animation: chapterFade 3s ease-out;
+        }
+
+        @keyframes chapterFade {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+            15% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+            85% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(1); }
         }
 
         .heart {
             display: inline-block;
-            margin: 0 3px;
-            animation: heartBeat 1.5s ease-in-out infinite;
+            margin: 0 2px;
+            font-size: 20px;
         }
 
-        @keyframes heartBeat {
-            0%, 100% { transform: scale(1); }
-            10% { transform: scale(1.15); }
-            20% { transform: scale(1); }
+        .stats-row {
+            display: flex;
+            gap: 35px;
+            justify-content: center;
+            margin-bottom: 15px;
+            font-size: 20px;
+            color: #c9a86c;
         }
 
-        #targetInfo {
+        .stats-row span {
+            color: #FFD700;
+        }
+
+        /* Active creatures display at bottom */
+        #activeCreatures {
             position: absolute;
-            bottom: 120px;
+            bottom: 80px;
             left: 50%;
             transform: translateX(-50%);
-            background: linear-gradient(145deg, rgba(60, 40, 20, 0.95), rgba(40, 25, 15, 0.95));
-            padding: 15px 30px;
-            border-radius: 12px;
-            border: 2px solid #8B4513;
-            color: #FFD700;
-            font-size: 24px;
-            font-weight: bold;
+            display: flex;
+            gap: 15px;
             z-index: 10;
-            display: none;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
         }
 
-        #targetInfo .creature-name {
+        .creature-card {
+            background: linear-gradient(145deg, rgba(40, 25, 15, 0.9), rgba(25, 15, 8, 0.9));
+            border: 2px solid #8B4513;
+            border-radius: 10px;
+            padding: 10px 15px;
+            text-align: center;
+            min-width: 100px;
+            transition: all 0.3s;
+        }
+
+        .creature-card.targeted {
+            border-color: #FFD700;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            transform: scale(1.05);
+        }
+
+        .creature-card .name {
+            font-size: 12px;
             color: #FF6B6B;
-            margin-right: 15px;
+            margin-bottom: 5px;
         }
 
-        #targetInfo .question {
+        .creature-card .question {
+            font-size: 20px;
             color: #7CFC00;
+            font-weight: bold;
+        }
+
+        .creature-card .timer {
+            height: 4px;
+            background: #333;
+            border-radius: 2px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+
+        .creature-card .timer-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #FF4444, #FFAA00, #7CFC00);
+            transition: width 0.1s linear;
+        }
+
+        .creature-card .timer-fill.danger {
+            background: #FF4444;
+            animation: timerPulse 0.3s infinite;
+        }
+
+        @keyframes timerPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
         }
 
         #creatureCount {
             position: absolute;
-            top: 100px;
-            left: 30px;
-            font-size: 18px;
+            top: 80px;
+            left: 25px;
+            font-size: 16px;
             color: #c9a86c;
             z-index: 10;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+        }
+
+        /* Chapter progress bar */
+        #chapterProgress {
+            position: absolute;
+            top: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            z-index: 10;
+        }
+
+        #chapterProgress .progress-label {
+            font-size: 11px;
+            color: #8B7355;
+            text-align: center;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        #chapterProgress .progress-bar {
+            height: 8px;
+            background: rgba(0,0,0,0.5);
+            border-radius: 4px;
+            border: 1px solid #8B4513;
+            overflow: hidden;
+        }
+
+        #chapterProgress .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00CED1, #7CFC00);
+            border-radius: 4px;
+            transition: width 0.3s ease-out;
+            box-shadow: 0 0 10px rgba(124, 252, 0, 0.5);
+        }
+
+        /* Direction indicator */
+        #directionIndicator {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 60px;
+            color: #FF6B6B;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 25;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.8);
+        }
+
+        #directionIndicator.show {
+            animation: directionFlash 0.6s ease-out;
+        }
+
+        @keyframes directionFlash {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(2); }
+            30% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
         }
     </style>
 </head>
@@ -394,12 +544,8 @@
             <span id="highscore" class="stat">0</span>
         </div>
         <div class="stat-group">
-            <span class="stat-label">Level</span>
-            <span id="level" class="stat">1</span>
-        </div>
-        <div class="stat-group">
-            <span class="stat-label">Welle</span>
-            <span id="wave" class="stat">1</span>
+            <span class="stat-label">Kapitel</span>
+            <span id="chapter" class="stat">1</span>
         </div>
         <div class="stat-group">
             <span class="stat-label">Leben</span>
@@ -407,16 +553,24 @@
         </div>
     </div>
 
-    <div id="combo" class="combo">COMBO x<span id="comboCount">0</span></div>
+    <div id="comboDisplay">COMBO x<span id="comboCount">0</span></div>
     <div id="creatureCount">Kreaturen: <span id="creatureNum">0</span></div>
 
-    <div id="targetInfo">
-        <span class="creature-name" id="targetName">Werwolf</span>
-        <span class="question" id="targetQuestion">3 x 4 = ?</span>
+    <div id="chapterProgress">
+        <div class="progress-label">Kapitel-Fortschritt</div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="chapterProgressFill" style="width: 0%"></div>
+        </div>
     </div>
 
+    <div id="directionIndicator"></div>
+
+    <div id="chapterAnnounce"></div>
+
+    <div id="activeCreatures"></div>
+
     <div id="inputContainer">
-        <input type="number" id="answerInput" placeholder="Antwort..." autocomplete="off">
+        <input type="number" id="answerInput" placeholder="?" autocomplete="off">
         <button id="submitButton">FEUER</button>
     </div>
 
@@ -425,90 +579,206 @@
 
     <div id="startScreen">
         <div class="screen-panel">
-            <h1>Fabelwesen Mathe-Abwehr</h1>
-            <div class="creature-preview">
-                <span class="creature-icon">Werwolf</span>
-                <span class="creature-icon">Greif</span>
-                <span class="creature-icon">Gnom</span>
-                <span class="creature-icon">Drache</span>
-            </div>
+            <h1>Fabelwesen Abwehr</h1>
             <p>
-                Fabelwesen nahen aus der Dunkelheit!<br>
-                Besiege sie mit der Macht der Mathematik!<br><br>
-                <strong>Tippe die richtige Antwort</strong> zur Multiplikationsaufgabe<br>
-                und druecke ENTER oder den FEUER-Button!<br><br>
-                Lass keine Kreatur zu nah kommen - oder du verlierst ein Leben!
+                Bewege dich durch den dunklen Wald und besiege Fabelwesen!<br>
+                <strong>Loese ihre Rechenaufgaben bevor die Zeit ablaeuft!</strong>
             </p>
 
             <div class="difficulty-selector">
-                <button class="difficulty-btn active" data-difficulty="easy">Lehrling (2-5)</button>
-                <button class="difficulty-btn" data-difficulty="medium">Geselle (2-8)</button>
-                <button class="difficulty-btn" data-difficulty="hard">Meister (2-10)</button>
+                <button class="difficulty-btn active" data-difficulty="easy">Lehrling</button>
+                <button class="difficulty-btn" data-difficulty="medium">Geselle</button>
+                <button class="difficulty-btn" data-difficulty="hard">Meister</button>
             </div>
 
-            <button class="button" onclick="startGame()">Kampf beginnen!</button>
+            <div class="row-selector">
+                <h3>Zahlenreihen auswaehlen:</h3>
+                <div class="row-buttons">
+                    <button class="row-btn active" data-row="2">2</button>
+                    <button class="row-btn active" data-row="3">3</button>
+                    <button class="row-btn active" data-row="4">4</button>
+                    <button class="row-btn active" data-row="5">5</button>
+                    <button class="row-btn active" data-row="6">6</button>
+                    <button class="row-btn active" data-row="7">7</button>
+                    <button class="row-btn active" data-row="8">8</button>
+                    <button class="row-btn active" data-row="9">9</button>
+                    <button class="row-btn active" data-row="10">10</button>
+                </div>
+                <div class="row-presets">
+                    <button class="preset-btn" onclick="selectRows([2,3,4,5])">Einfach (2-5)</button>
+                    <button class="preset-btn" onclick="selectRows([6,7,8])">Mittel (6-8)</button>
+                    <button class="preset-btn" onclick="selectRows([7,8,9])">Schwer (7-9)</button>
+                    <button class="preset-btn" onclick="selectRows([2,3,4,5,6,7,8,9,10])">Alle</button>
+                </div>
+            </div>
+
+            <button class="button" onclick="startGame()">Expedition starten!</button>
         </div>
     </div>
 
     <div id="gameOverScreen" style="display: none;">
         <div class="screen-panel">
-            <h1>Niederlage!</h1>
+            <h1>Expedition gescheitert!</h1>
             <p>Die Fabelwesen haben dich uebermannt...</p>
             <div class="stats-row">
                 <div>Punkte: <span id="finalScore">0</span></div>
-                <div>Level: <span id="finalLevel">0</span></div>
+                <div>Kapitel: <span id="finalChapter">0</span></div>
             </div>
             <div class="stats-row">
                 <div>Highscore: <span id="displayHighscore">0</span></div>
             </div>
-            <div id="newHighscoreMessage" style="color: #FFD700; font-size: 24px; margin: 15px 0; display: none;">
+            <div id="newHighscoreMessage" style="color: #FFD700; font-size: 22px; margin: 12px 0; display: none;">
                 NEUER HIGHSCORE!
             </div>
-            <button class="button" onclick="location.reload()">Erneut kaempfen!</button>
+            <button class="button" onclick="location.reload()">Nochmal!</button>
         </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
-        // Three.js Setup
+        // ==================== THREE.JS SETUP ====================
         let scene, camera, renderer;
-        let creatures = [];
+        let activeCreatures = [];
         let particles = [];
-        let ground, fog;
-        let ambientLight, directionalLight, pointLights = [];
+        let environmentObjects = [];
+        let pathPoints = [];
+        let currentPathIndex = 0;
+        let pathProgress = 0;
 
-        // Game State
+        // ==================== MATH PROBLEM POOL ====================
+        let problemPool = [];
+        let usedProblems = new Set();
+        let lastProblemKey = null;
+
+        function initProblemPool() {
+            problemPool = [];
+            usedProblems.clear();
+            lastProblemKey = null;
+
+            const selectedRows = gameState.selectedRows;
+
+            // Create all possible problems from selected rows
+            for (const row of selectedRows) {
+                for (let i = 2; i <= 10; i++) {
+                    // Add both directions: row × i and i × row
+                    const key1 = `${row}x${i}`;
+                    const key2 = `${i}x${row}`;
+
+                    if (!problemPool.some(p => p.key === key1)) {
+                        problemPool.push({ num1: row, num2: i, key: key1 });
+                    }
+                    if (row !== i && !problemPool.some(p => p.key === key2)) {
+                        problemPool.push({ num1: i, num2: row, key: key2 });
+                    }
+                }
+            }
+
+            // Shuffle the pool
+            shuffleArray(problemPool);
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function getNextProblem() {
+            // If pool is empty or all used, refill
+            if (problemPool.length === 0 || usedProblems.size >= problemPool.length) {
+                usedProblems.clear();
+                shuffleArray(problemPool);
+            }
+
+            // Find unused problem that is NOT the same as last one
+            for (const problem of problemPool) {
+                if (!usedProblems.has(problem.key) && problem.key !== lastProblemKey) {
+                    usedProblems.add(problem.key);
+                    lastProblemKey = problem.key;
+                    return { num1: problem.num1, num2: problem.num2 };
+                }
+            }
+
+            // Fallback: find any unused problem
+            for (const problem of problemPool) {
+                if (!usedProblems.has(problem.key)) {
+                    usedProblems.add(problem.key);
+                    lastProblemKey = problem.key;
+                    return { num1: problem.num1, num2: problem.num2 };
+                }
+            }
+
+            // Final fallback
+            const idx = Math.floor(Math.random() * problemPool.length);
+            lastProblemKey = problemPool[idx].key;
+            return { num1: problemPool[idx].num1, num2: problemPool[idx].num2 };
+        }
+
+        // ==================== GAME STATE ====================
         let gameState = {
             score: 0,
             lives: 5,
-            level: 1,
-            wave: 1,
+            chapter: 1,
             isPlaying: false,
             difficulty: 'easy',
             combo: 0,
             highscore: parseInt(localStorage.getItem('mathGame3DHighscore') || '0'),
-            creaturesDefeated: 0,
-            waveCreatures: 0,
-            spawnTimer: 0
+            cameraMoving: true,
+            isInEncounter: false,
+            totalDefeated: 0,
+            chapterDefeated: 0,
+            selectedRows: [2, 3, 4, 5, 6, 7, 8, 9, 10],
+            maxActiveCreatures: 1,
+            encounterScheduleTimer: null,
+            nextEncounterDistance: 0,
+            distanceTraveled: 0
         };
 
         const difficulties = {
-            easy: { maxNumber: 5, speed: 0.015, spawnRate: 3500 },
-            medium: { maxNumber: 8, speed: 0.02, spawnRate: 2800 },
-            hard: { maxNumber: 10, speed: 0.025, spawnRate: 2200 }
+            easy: { baseTime: 8000, minTime: 4000, minDistance: 8, maxDistance: 20, cameraSpeed: 0.6 },
+            medium: { baseTime: 6000, minTime: 3000, minDistance: 6, maxDistance: 16, cameraSpeed: 0.8 },
+            hard: { baseTime: 4500, minTime: 2500, minDistance: 4, maxDistance: 12, cameraSpeed: 1.0 }
         };
 
-        // Creature Types
+        // Direction types for encounters
+        const encounterDirections = ['front', 'left', 'right', 'above', 'behind'];
+
+        // ==================== CREATURE DEFINITIONS ====================
         const creatureTypes = [
-            { name: 'Werwolf', color: 0x5D4037, emissive: 0x3E2723, scale: 1.0, points: 10 },
-            { name: 'Greif', color: 0xFFD700, emissive: 0xB8860B, scale: 1.2, points: 15 },
-            { name: 'Gnom', color: 0x2E7D32, emissive: 0x1B5E20, scale: 0.7, points: 8 },
-            { name: 'Drache', color: 0xC62828, emissive: 0x8B0000, scale: 1.5, points: 25 },
-            { name: 'Troll', color: 0x455A64, emissive: 0x263238, scale: 1.8, points: 20 },
-            { name: 'Fee', color: 0xE91E63, emissive: 0xAD1457, scale: 0.5, points: 12 }
+            { name: 'Werwolf', color: 0x4a3728, furColor: 0x5d4037, eyeColor: 0xffff00, points: 10, buildModel: buildWerewolf },
+            { name: 'Greif', color: 0xdaa520, featherColor: 0xb8860b, eyeColor: 0xff6600, points: 15, buildModel: buildGriffin },
+            { name: 'Gnom', color: 0x228b22, skinColor: 0xdeb887, eyeColor: 0x000000, points: 8, buildModel: buildGnome },
+            { name: 'Drache', color: 0x8b0000, scaleColor: 0xb22222, eyeColor: 0xff0000, points: 25, buildModel: buildDragon },
+            { name: 'Troll', color: 0x4a5568, skinColor: 0x6b7280, eyeColor: 0x90ee90, points: 20, buildModel: buildTroll },
+            { name: 'Hexe', color: 0x4b0082, cloakColor: 0x2e0854, eyeColor: 0x00ff00, points: 18, buildModel: buildWitch }
         ];
 
-        // Audio Context
+        // ==================== ROW SELECTION ====================
+        function selectRows(rows) {
+            document.querySelectorAll('.row-btn').forEach(btn => {
+                const row = parseInt(btn.dataset.row);
+                if (rows.includes(row)) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+            updateSelectedRows();
+        }
+
+        function updateSelectedRows() {
+            gameState.selectedRows = [];
+            document.querySelectorAll('.row-btn.active').forEach(btn => {
+                gameState.selectedRows.push(parseInt(btn.dataset.row));
+            });
+            if (gameState.selectedRows.length === 0) {
+                gameState.selectedRows = [2, 3, 4, 5, 6, 7, 8, 9, 10];
+                document.querySelectorAll('.row-btn').forEach(btn => btn.classList.add('active'));
+            }
+        }
+
+        // ==================== AUDIO ====================
         const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
         function playSound(type) {
@@ -520,58 +790,61 @@
             switch(type) {
                 case 'correct':
                     oscillator.type = 'triangle';
-                    oscillator.frequency.setValueAtTime(440, audioContext.currentTime);
-                    oscillator.frequency.exponentialRampToValueAtTime(880, audioContext.currentTime + 0.1);
-                    oscillator.frequency.exponentialRampToValueAtTime(1320, audioContext.currentTime + 0.2);
-                    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.4);
-                    oscillator.start(audioContext.currentTime);
-                    oscillator.stop(audioContext.currentTime + 0.4);
-                    break;
-                case 'wrong':
-                    oscillator.type = 'sawtooth';
-                    oscillator.frequency.setValueAtTime(200, audioContext.currentTime);
-                    oscillator.frequency.exponentialRampToValueAtTime(80, audioContext.currentTime + 0.3);
-                    gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+                    oscillator.frequency.setValueAtTime(523, audioContext.currentTime);
+                    oscillator.frequency.exponentialRampToValueAtTime(1047, audioContext.currentTime + 0.15);
+                    gainNode.gain.setValueAtTime(0.25, audioContext.currentTime);
                     gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
                     oscillator.start(audioContext.currentTime);
                     oscillator.stop(audioContext.currentTime + 0.3);
                     break;
-                case 'damage':
-                    oscillator.type = 'square';
-                    oscillator.frequency.setValueAtTime(150, audioContext.currentTime);
-                    oscillator.frequency.exponentialRampToValueAtTime(50, audioContext.currentTime + 0.5);
-                    gainNode.gain.setValueAtTime(0.4, audioContext.currentTime);
-                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+                case 'wrong':
+                    oscillator.type = 'sawtooth';
+                    oscillator.frequency.setValueAtTime(180, audioContext.currentTime);
+                    oscillator.frequency.exponentialRampToValueAtTime(60, audioContext.currentTime + 0.4);
+                    gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.4);
                     oscillator.start(audioContext.currentTime);
-                    oscillator.stop(audioContext.currentTime + 0.5);
+                    oscillator.stop(audioContext.currentTime + 0.4);
                     break;
-                case 'levelup':
-                    oscillator.type = 'sine';
-                    oscillator.frequency.setValueAtTime(523, audioContext.currentTime);
-                    oscillator.frequency.setValueAtTime(659, audioContext.currentTime + 0.1);
-                    oscillator.frequency.setValueAtTime(784, audioContext.currentTime + 0.2);
-                    oscillator.frequency.setValueAtTime(1047, audioContext.currentTime + 0.3);
-                    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+                case 'spawn':
+                    oscillator.type = 'square';
+                    oscillator.frequency.setValueAtTime(220, audioContext.currentTime);
+                    oscillator.frequency.setValueAtTime(330, audioContext.currentTime + 0.1);
+                    gainNode.gain.setValueAtTime(0.12, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.15);
                     oscillator.start(audioContext.currentTime);
-                    oscillator.stop(audioContext.currentTime + 0.5);
+                    oscillator.stop(audioContext.currentTime + 0.15);
+                    break;
+                case 'chapter':
+                    oscillator.type = 'sine';
+                    [523, 659, 784, 1047].forEach((freq, i) => {
+                        oscillator.frequency.setValueAtTime(freq, audioContext.currentTime + i * 0.15);
+                    });
+                    gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.7);
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + 0.7);
+                    break;
+                case 'timeWarning':
+                    oscillator.type = 'square';
+                    oscillator.frequency.setValueAtTime(440, audioContext.currentTime);
+                    gainNode.gain.setValueAtTime(0.08, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.08);
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + 0.08);
                     break;
             }
         }
 
+        // ==================== 3D INITIALIZATION ====================
         function init3D() {
-            // Scene
             scene = new THREE.Scene();
-            scene.background = new THREE.Color(0x0a0510);
-            scene.fog = new THREE.FogExp2(0x1a0a25, 0.015);
+            scene.background = new THREE.Color(0x050208);
+            scene.fog = new THREE.FogExp2(0x0a0510, 0.02);
 
-            // Camera (First Person View)
-            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.set(0, 2, 0);
-            camera.lookAt(0, 1.5, -50);
+            camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 500);
+            camera.position.set(0, 1.7, 0);
 
-            // Renderer
             renderer = new THREE.WebGLRenderer({ antialias: true });
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.shadowMap.enabled = true;
@@ -579,521 +852,785 @@
             document.getElementById('gameCanvas').appendChild(renderer.domElement);
 
             // Lighting
-            ambientLight = new THREE.AmbientLight(0x2a1a3a, 0.4);
-            scene.add(ambientLight);
+            const ambient = new THREE.AmbientLight(0x1a1025, 0.5);
+            scene.add(ambient);
 
-            directionalLight = new THREE.DirectionalLight(0x8866aa, 0.6);
-            directionalLight.position.set(10, 20, -10);
-            directionalLight.castShadow = true;
-            directionalLight.shadow.mapSize.width = 2048;
-            directionalLight.shadow.mapSize.height = 2048;
-            scene.add(directionalLight);
-
-            // Moonlight
-            const moonLight = new THREE.PointLight(0x6666ff, 0.8, 100);
-            moonLight.position.set(-20, 30, -40);
+            const moonLight = new THREE.DirectionalLight(0x6666aa, 0.4);
+            moonLight.position.set(-50, 100, -50);
+            moonLight.castShadow = true;
             scene.add(moonLight);
 
-            // Torch lights along the path
-            for (let i = 0; i < 6; i++) {
-                const torchLight = new THREE.PointLight(0xff6600, 0.8, 15);
-                torchLight.position.set((i % 2 === 0 ? -8 : 8), 3, -i * 20 - 10);
-                scene.add(torchLight);
-                pointLights.push(torchLight);
-
-                // Torch holder
-                const torchGeom = new THREE.CylinderGeometry(0.1, 0.15, 2, 8);
-                const torchMat = new THREE.MeshStandardMaterial({ color: 0x4a3728 });
-                const torch = new THREE.Mesh(torchGeom, torchMat);
-                torch.position.copy(torchLight.position);
-                torch.position.y -= 1;
-                scene.add(torch);
-            }
-
-            // Ground - Dark forest path
-            const groundGeom = new THREE.PlaneGeometry(30, 200);
-            const groundMat = new THREE.MeshStandardMaterial({
-                color: 0x2a1a0a,
-                roughness: 0.9,
-                metalness: 0.1
-            });
-            ground = new THREE.Mesh(groundGeom, groundMat);
-            ground.rotation.x = -Math.PI / 2;
-            ground.position.z = -80;
-            ground.receiveShadow = true;
-            scene.add(ground);
-
-            // Path stones
-            for (let i = 0; i < 40; i++) {
-                const stoneGeom = new THREE.BoxGeometry(
-                    Math.random() * 1.5 + 0.5,
-                    0.1,
-                    Math.random() * 1.5 + 0.5
-                );
-                const stoneMat = new THREE.MeshStandardMaterial({
-                    color: new THREE.Color().setHSL(0.08, 0.2, 0.15 + Math.random() * 0.1)
-                });
-                const stone = new THREE.Mesh(stoneGeom, stoneMat);
-                stone.position.set(
-                    (Math.random() - 0.5) * 10,
-                    0.05,
-                    -Math.random() * 150 - 5
-                );
-                stone.rotation.y = Math.random() * Math.PI;
-                stone.receiveShadow = true;
-                scene.add(stone);
-            }
-
-            // Trees on the sides
-            for (let i = 0; i < 30; i++) {
-                createTree(-12 - Math.random() * 10, -i * 6 - 5);
-                createTree(12 + Math.random() * 10, -i * 6 - 5);
-            }
-
-            // Gravestones
-            for (let i = 0; i < 15; i++) {
-                createGravestone(
-                    (Math.random() > 0.5 ? 1 : -1) * (8 + Math.random() * 5),
-                    -i * 12 - 10
-                );
-            }
-
-            // Moon
-            const moonGeom = new THREE.SphereGeometry(5, 32, 32);
-            const moonMat = new THREE.MeshBasicMaterial({ color: 0xffffcc });
-            const moon = new THREE.Mesh(moonGeom, moonMat);
-            moon.position.set(-30, 50, -150);
-            scene.add(moon);
+            createPath();
+            createEnvironment();
 
             window.addEventListener('resize', onWindowResize);
         }
 
-        function createTree(x, z) {
-            const trunkGeom = new THREE.CylinderGeometry(0.3, 0.5, 4, 8);
-            const trunkMat = new THREE.MeshStandardMaterial({ color: 0x2d1b0e });
-            const trunk = new THREE.Mesh(trunkGeom, trunkMat);
-            trunk.position.set(x, 2, z);
-            trunk.castShadow = true;
-            scene.add(trunk);
+        function createPath() {
+            pathPoints = [];
+            let x = 0, z = 0, angle = 0;
 
-            // Dead tree - no leaves, just branches
-            for (let i = 0; i < 4; i++) {
-                const branchGeom = new THREE.CylinderGeometry(0.05, 0.15, 2 + Math.random());
-                const branch = new THREE.Mesh(branchGeom, trunkMat);
-                branch.position.set(x, 3 + i * 0.5, z);
-                branch.rotation.z = (Math.random() - 0.5) * 1.5;
-                branch.rotation.y = Math.random() * Math.PI * 2;
-                scene.add(branch);
+            for (let i = 0; i < 150; i++) {
+                pathPoints.push(new THREE.Vector3(x, 1.7, z));
+                if (i > 0 && i % 8 === 0) {
+                    angle += (Math.random() - 0.5) * 0.6;
+                }
+                x += Math.sin(angle) * 5;
+                z -= Math.cos(angle) * 5;
             }
         }
 
-        function createGravestone(x, z) {
-            const height = 1 + Math.random() * 0.5;
-            const geom = new THREE.BoxGeometry(0.8, height, 0.2);
-            const mat = new THREE.MeshStandardMaterial({
-                color: 0x4a4a4a,
-                roughness: 0.9
+        function createEnvironment() {
+            // Ground
+            const groundGeom = new THREE.PlaneGeometry(600, 600);
+            const groundMat = new THREE.MeshStandardMaterial({ color: 0x1a0f05, roughness: 1 });
+            const ground = new THREE.Mesh(groundGeom, groundMat);
+            ground.rotation.x = -Math.PI / 2;
+            ground.receiveShadow = true;
+            scene.add(ground);
+
+            pathPoints.forEach((point, i) => {
+                if (i % 3 === 0) {
+                    createTree(point.x - 6 - Math.random() * 4, point.z + (Math.random() - 0.5) * 4);
+                    createTree(point.x + 6 + Math.random() * 4, point.z + (Math.random() - 0.5) * 4);
+                }
+                if (i % 5 === 0) {
+                    createTorch(point.x - 3, point.z);
+                    createTorch(point.x + 3, point.z);
+                }
+                if (i % 7 === 0 && Math.random() > 0.5) {
+                    createGravestone(point.x + (Math.random() > 0.5 ? 4 : -4), point.z);
+                }
             });
+
+            // Moon
+            const moonGeom = new THREE.SphereGeometry(8, 32, 32);
+            const moonMat = new THREE.MeshBasicMaterial({ color: 0xffffee });
+            const moon = new THREE.Mesh(moonGeom, moonMat);
+            moon.position.set(-80, 80, -200);
+            scene.add(moon);
+
+            // Stars
+            const starGeom = new THREE.BufferGeometry();
+            const starPositions = [];
+            for (let i = 0; i < 500; i++) {
+                starPositions.push(
+                    (Math.random() - 0.5) * 400,
+                    50 + Math.random() * 100,
+                    (Math.random() - 0.5) * 400 - 100
+                );
+            }
+            starGeom.setAttribute('position', new THREE.Float32BufferAttribute(starPositions, 3));
+            const starMat = new THREE.PointsMaterial({ color: 0xffffff, size: 0.5 });
+            scene.add(new THREE.Points(starGeom, starMat));
+        }
+
+        function createTree(x, z) {
+            const group = new THREE.Group();
+            const trunkGeom = new THREE.CylinderGeometry(0.3, 0.5, 6, 8);
+            const trunkMat = new THREE.MeshStandardMaterial({ color: 0x2d1b0e });
+            const trunk = new THREE.Mesh(trunkGeom, trunkMat);
+            trunk.position.y = 3;
+            trunk.castShadow = true;
+            group.add(trunk);
+
+            for (let i = 0; i < 5; i++) {
+                const branchGeom = new THREE.CylinderGeometry(0.03, 0.1, 1.5 + Math.random());
+                const branch = new THREE.Mesh(branchGeom, trunkMat);
+                branch.position.y = 3 + i * 0.9;
+                branch.rotation.z = (Math.random() - 0.5) * 1.2;
+                branch.rotation.y = Math.random() * Math.PI * 2;
+                group.add(branch);
+            }
+            group.position.set(x, 0, z);
+            scene.add(group);
+        }
+
+        function createTorch(x, z) {
+            const group = new THREE.Group();
+            const poleGeom = new THREE.CylinderGeometry(0.08, 0.12, 2.5, 6);
+            const poleMat = new THREE.MeshStandardMaterial({ color: 0x3d2817 });
+            const pole = new THREE.Mesh(poleGeom, poleMat);
+            pole.position.y = 1.25;
+            group.add(pole);
+
+            const fireLight = new THREE.PointLight(0xff6622, 1.5, 12);
+            fireLight.position.y = 2.7;
+            group.add(fireLight);
+
+            const flameGeom = new THREE.ConeGeometry(0.1, 0.4, 8);
+            const flameMat = new THREE.MeshBasicMaterial({ color: 0xff4400 });
+            const flame = new THREE.Mesh(flameGeom, flameMat);
+            flame.position.y = 2.7;
+            group.add(flame);
+
+            group.position.set(x, 0, z);
+            group.userData.light = fireLight;
+            environmentObjects.push(group);
+            scene.add(group);
+        }
+
+        function createGravestone(x, z) {
+            const height = 0.8 + Math.random() * 0.5;
+            const geom = new THREE.BoxGeometry(0.6, height, 0.15);
+            const mat = new THREE.MeshStandardMaterial({ color: 0x3a3a3a, roughness: 0.9 });
             const stone = new THREE.Mesh(geom, mat);
             stone.position.set(x, height / 2, z);
-            stone.rotation.y = (Math.random() - 0.5) * 0.3;
+            stone.rotation.y = (Math.random() - 0.5) * 0.4;
             stone.castShadow = true;
             scene.add(stone);
         }
 
-        function onWindowResize() {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
+        // ==================== CREATURE MODEL BUILDERS ====================
+        function buildWerewolf(group, type) {
+            const furMat = new THREE.MeshStandardMaterial({ color: type.furColor, roughness: 0.9 });
+            const bodyMat = new THREE.MeshStandardMaterial({ color: type.color, roughness: 0.8 });
+
+            const bodyGeom = new THREE.SphereGeometry(0.6, 16, 16);
+            const body = new THREE.Mesh(bodyGeom, furMat);
+            body.scale.set(1, 0.8, 1.2);
+            body.position.y = 1;
+            group.add(body);
+
+            const headGeom = new THREE.SphereGeometry(0.35, 16, 16);
+            const head = new THREE.Mesh(headGeom, furMat);
+            head.position.set(0, 1.5, 0.4);
+            group.add(head);
+
+            const snoutGeom = new THREE.ConeGeometry(0.15, 0.4, 8);
+            const snout = new THREE.Mesh(snoutGeom, bodyMat);
+            snout.rotation.x = Math.PI / 2;
+            snout.position.set(0, 1.45, 0.75);
+            group.add(snout);
+
+            [-0.2, 0.2].forEach(xOffset => {
+                const earGeom = new THREE.ConeGeometry(0.1, 0.25, 4);
+                const ear = new THREE.Mesh(earGeom, furMat);
+                ear.position.set(xOffset, 1.85, 0.3);
+                ear.rotation.x = -0.2;
+                group.add(ear);
+            });
+
+            const eyeMat = new THREE.MeshBasicMaterial({ color: type.eyeColor });
+            [-0.12, 0.12].forEach(xOffset => {
+                const eyeGeom = new THREE.SphereGeometry(0.06, 8, 8);
+                const eye = new THREE.Mesh(eyeGeom, eyeMat);
+                eye.position.set(xOffset, 1.55, 0.65);
+                group.add(eye);
+            });
+
+            [-0.5, 0.5].forEach(xOffset => {
+                const armGeom = new THREE.CylinderGeometry(0.1, 0.08, 0.7, 8);
+                const arm = new THREE.Mesh(armGeom, furMat);
+                arm.position.set(xOffset, 0.8, 0.2);
+                arm.rotation.z = xOffset > 0 ? -0.5 : 0.5;
+                arm.rotation.x = 0.3;
+                group.add(arm);
+            });
+
+            [-0.25, 0.25].forEach(xOffset => {
+                const legGeom = new THREE.CylinderGeometry(0.12, 0.1, 0.8, 8);
+                const leg = new THREE.Mesh(legGeom, furMat);
+                leg.position.set(xOffset, 0.4, -0.1);
+                group.add(leg);
+            });
         }
 
-        // Creature Class
+        function buildGriffin(group, type) {
+            const featherMat = new THREE.MeshStandardMaterial({ color: type.featherColor, roughness: 0.7 });
+            const bodyMat = new THREE.MeshStandardMaterial({ color: type.color, metalness: 0.3, roughness: 0.5 });
+
+            const bodyGeom = new THREE.SphereGeometry(0.7, 16, 16);
+            const body = new THREE.Mesh(bodyGeom, bodyMat);
+            body.scale.set(1, 0.7, 1.3);
+            body.position.y = 0.9;
+            group.add(body);
+
+            const headGeom = new THREE.SphereGeometry(0.3, 16, 16);
+            const head = new THREE.Mesh(headGeom, featherMat);
+            head.position.set(0, 1.4, 0.6);
+            group.add(head);
+
+            const beakGeom = new THREE.ConeGeometry(0.1, 0.35, 4);
+            const beakMat = new THREE.MeshStandardMaterial({ color: 0xff8c00 });
+            const beak = new THREE.Mesh(beakGeom, beakMat);
+            beak.rotation.x = Math.PI / 2;
+            beak.position.set(0, 1.35, 0.9);
+            group.add(beak);
+
+            const eyeMat = new THREE.MeshBasicMaterial({ color: type.eyeColor });
+            [-0.12, 0.12].forEach(xOffset => {
+                const eyeGeom = new THREE.SphereGeometry(0.06, 8, 8);
+                const eye = new THREE.Mesh(eyeGeom, eyeMat);
+                eye.position.set(xOffset, 1.5, 0.8);
+                group.add(eye);
+            });
+
+            [-1, 1].forEach(side => {
+                const wingGeom = new THREE.BoxGeometry(1.2, 0.08, 0.6);
+                const wing = new THREE.Mesh(wingGeom, featherMat);
+                wing.position.set(side * 1.1, 1.1, 0);
+                wing.rotation.z = side * 0.4;
+                group.add(wing);
+            });
+
+            [-0.3, 0.3].forEach(xOffset => {
+                const legGeom = new THREE.CylinderGeometry(0.08, 0.06, 0.6, 8);
+                const leg = new THREE.Mesh(legGeom, bodyMat);
+                leg.position.set(xOffset, 0.3, 0);
+                group.add(leg);
+            });
+        }
+
+        function buildGnome(group, type) {
+            const skinMat = new THREE.MeshStandardMaterial({ color: type.skinColor, roughness: 0.8 });
+            const clothMat = new THREE.MeshStandardMaterial({ color: type.color, roughness: 0.9 });
+
+            const bodyGeom = new THREE.SphereGeometry(0.35, 16, 16);
+            const body = new THREE.Mesh(bodyGeom, clothMat);
+            body.scale.set(1, 1.2, 0.9);
+            body.position.y = 0.5;
+            group.add(body);
+
+            const headGeom = new THREE.SphereGeometry(0.25, 16, 16);
+            const head = new THREE.Mesh(headGeom, skinMat);
+            head.position.y = 1;
+            group.add(head);
+
+            const noseGeom = new THREE.SphereGeometry(0.1, 8, 8);
+            const nose = new THREE.Mesh(noseGeom, skinMat);
+            nose.position.set(0, 0.95, 0.25);
+            group.add(nose);
+
+            const hatGeom = new THREE.ConeGeometry(0.25, 0.5, 8);
+            const hatMat = new THREE.MeshStandardMaterial({ color: 0xcc0000 });
+            const hat = new THREE.Mesh(hatGeom, hatMat);
+            hat.position.y = 1.4;
+            group.add(hat);
+
+            const beardGeom = new THREE.ConeGeometry(0.2, 0.4, 8);
+            const beardMat = new THREE.MeshStandardMaterial({ color: 0xffffff });
+            const beard = new THREE.Mesh(beardGeom, beardMat);
+            beard.position.set(0, 0.65, 0.15);
+            beard.rotation.x = Math.PI;
+            group.add(beard);
+
+            group.scale.setScalar(1.5);
+        }
+
+        function buildDragon(group, type) {
+            const scaleMat = new THREE.MeshStandardMaterial({ color: type.scaleColor, roughness: 0.6, metalness: 0.2 });
+            const bodyMat = new THREE.MeshStandardMaterial({ color: type.color, roughness: 0.5 });
+
+            const bodyGeom = new THREE.SphereGeometry(0.8, 16, 16);
+            const body = new THREE.Mesh(bodyGeom, scaleMat);
+            body.scale.set(1, 0.7, 1.4);
+            body.position.y = 1.2;
+            group.add(body);
+
+            const headGeom = new THREE.SphereGeometry(0.35, 16, 16);
+            const head = new THREE.Mesh(headGeom, scaleMat);
+            head.scale.set(1, 0.8, 1.3);
+            head.position.set(0, 1.8, 0.7);
+            group.add(head);
+
+            [-0.2, 0.2].forEach(xOffset => {
+                const hornGeom = new THREE.ConeGeometry(0.08, 0.4, 6);
+                const hornMat = new THREE.MeshStandardMaterial({ color: 0x222222 });
+                const horn = new THREE.Mesh(hornGeom, hornMat);
+                horn.position.set(xOffset, 2.15, 0.5);
+                horn.rotation.x = -0.5;
+                group.add(horn);
+            });
+
+            const eyeMat = new THREE.MeshBasicMaterial({ color: type.eyeColor });
+            [-0.15, 0.15].forEach(xOffset => {
+                const eyeGeom = new THREE.SphereGeometry(0.08, 8, 8);
+                const eye = new THREE.Mesh(eyeGeom, eyeMat);
+                eye.position.set(xOffset, 1.9, 0.95);
+                group.add(eye);
+            });
+
+            [-1, 1].forEach(side => {
+                const wingGeom = new THREE.BoxGeometry(1.5, 0.05, 0.8);
+                const wingMat = new THREE.MeshStandardMaterial({ color: type.color, side: THREE.DoubleSide });
+                const wing = new THREE.Mesh(wingGeom, wingMat);
+                wing.position.set(side * 1.2, 1.4, 0);
+                wing.rotation.z = side * 0.4;
+                group.add(wing);
+            });
+
+            const fireLight = new THREE.PointLight(0xff4400, 2, 8);
+            fireLight.position.set(0, 1.8, 1.2);
+            group.add(fireLight);
+        }
+
+        function buildTroll(group, type) {
+            const skinMat = new THREE.MeshStandardMaterial({ color: type.skinColor, roughness: 0.9 });
+
+            const bodyGeom = new THREE.SphereGeometry(0.9, 16, 16);
+            const body = new THREE.Mesh(bodyGeom, skinMat);
+            body.scale.set(1, 1.1, 0.9);
+            body.position.y = 1.3;
+            group.add(body);
+
+            const headGeom = new THREE.SphereGeometry(0.35, 16, 16);
+            const head = new THREE.Mesh(headGeom, skinMat);
+            head.position.y = 2.3;
+            group.add(head);
+
+            const noseGeom = new THREE.SphereGeometry(0.15, 8, 8);
+            const nose = new THREE.Mesh(noseGeom, skinMat);
+            nose.position.set(0, 2.2, 0.35);
+            group.add(nose);
+
+            const eyeMat = new THREE.MeshBasicMaterial({ color: type.eyeColor });
+            [-0.12, 0.12].forEach(xOffset => {
+                const eyeGeom = new THREE.SphereGeometry(0.06, 8, 8);
+                const eye = new THREE.Mesh(eyeGeom, eyeMat);
+                eye.position.set(xOffset, 2.35, 0.28);
+                group.add(eye);
+            });
+
+            [-0.8, 0.8].forEach(xOffset => {
+                const armGeom = new THREE.CylinderGeometry(0.2, 0.15, 1, 8);
+                const arm = new THREE.Mesh(armGeom, skinMat);
+                arm.position.set(xOffset, 1, 0.2);
+                arm.rotation.z = xOffset > 0 ? -0.6 : 0.6;
+                group.add(arm);
+            });
+
+            [-0.35, 0.35].forEach(xOffset => {
+                const legGeom = new THREE.CylinderGeometry(0.2, 0.18, 0.6, 8);
+                const leg = new THREE.Mesh(legGeom, skinMat);
+                leg.position.set(xOffset, 0.3, 0);
+                group.add(leg);
+            });
+
+            const clubGeom = new THREE.CylinderGeometry(0.08, 0.12, 1.2, 8);
+            const clubMat = new THREE.MeshStandardMaterial({ color: 0x3d2817 });
+            const club = new THREE.Mesh(clubGeom, clubMat);
+            club.position.set(1.1, 0.8, 0.3);
+            club.rotation.z = 0.3;
+            group.add(club);
+        }
+
+        function buildWitch(group, type) {
+            const cloakMat = new THREE.MeshStandardMaterial({ color: type.cloakColor, roughness: 0.9 });
+            const skinMat = new THREE.MeshStandardMaterial({ color: 0x98fb98, roughness: 0.7 });
+
+            const cloakGeom = new THREE.ConeGeometry(0.5, 1.4, 8);
+            const cloak = new THREE.Mesh(cloakGeom, cloakMat);
+            cloak.position.y = 0.7;
+            group.add(cloak);
+
+            const headGeom = new THREE.SphereGeometry(0.25, 16, 16);
+            const head = new THREE.Mesh(headGeom, skinMat);
+            head.position.y = 1.55;
+            group.add(head);
+
+            const noseGeom = new THREE.ConeGeometry(0.06, 0.2, 6);
+            const nose = new THREE.Mesh(noseGeom, skinMat);
+            nose.position.set(0, 1.5, 0.25);
+            nose.rotation.x = Math.PI / 2 + 0.3;
+            group.add(nose);
+
+            const hatGeom = new THREE.ConeGeometry(0.35, 0.8, 8);
+            const hatMat = new THREE.MeshStandardMaterial({ color: 0x1a0a2e });
+            const hat = new THREE.Mesh(hatGeom, hatMat);
+            hat.position.y = 2;
+            group.add(hat);
+
+            const brimGeom = new THREE.CylinderGeometry(0.45, 0.5, 0.05, 16);
+            const brim = new THREE.Mesh(brimGeom, hatMat);
+            brim.position.y = 1.65;
+            group.add(brim);
+
+            const eyeMat = new THREE.MeshBasicMaterial({ color: type.eyeColor });
+            [-0.08, 0.08].forEach(xOffset => {
+                const eyeGeom = new THREE.SphereGeometry(0.04, 8, 8);
+                const eye = new THREE.Mesh(eyeGeom, eyeMat);
+                eye.position.set(xOffset, 1.58, 0.2);
+                group.add(eye);
+            });
+
+            const broomGeom = new THREE.CylinderGeometry(0.03, 0.03, 1.8, 8);
+            const broomMat = new THREE.MeshStandardMaterial({ color: 0x4a3728 });
+            const broom = new THREE.Mesh(broomGeom, broomMat);
+            broom.position.set(0.5, 0.9, 0);
+            broom.rotation.z = 0.2;
+            group.add(broom);
+
+            const auraLight = new THREE.PointLight(0x9932cc, 1, 5);
+            auraLight.position.set(0, 1.2, 0.3);
+            group.add(auraLight);
+        }
+
+        // ==================== CREATURE CLASS ====================
         class Creature {
-            constructor(level, difficulty) {
-                const diffConfig = difficulties[difficulty];
-                const typeIndex = Math.floor(Math.random() * Math.min(creatureTypes.length, 2 + Math.floor(level / 2)));
-                this.type = creatureTypes[typeIndex];
-
-                // Math problem
-                const maxNum = Math.min(diffConfig.maxNumber, 2 + Math.floor(level / 2));
-                this.num1 = Math.floor(Math.random() * (maxNum - 1)) + 2;
-                this.num2 = Math.floor(Math.random() * (maxNum - 1)) + 2;
-                this.answer = this.num1 * this.num2;
-                this.question = `${this.num1} x ${this.num2}`;
-
-                // Speed increases with level
-                this.speed = diffConfig.speed * (1 + level * 0.05);
-
-                // Create 3D model
-                this.createModel();
-
-                // Position
-                this.mesh.position.set(
-                    (Math.random() - 0.5) * 12,
-                    this.type.scale,
-                    -80 - Math.random() * 30
-                );
-
+            constructor(position, type, num1, num2) {
+                this.type = type;
+                this.num1 = num1;
+                this.num2 = num2;
+                this.answer = num1 * num2;
+                this.question = `${num1} × ${num2}`;
                 this.defeated = false;
-                this.wobblePhase = Math.random() * Math.PI * 2;
+                this.id = Math.random().toString(36).substr(2, 9);
 
-                // Question label (3D text sprite)
+                // Time management
+                const diff = difficulties[gameState.difficulty];
+                const timeReduction = Math.min(gameState.chapter * 150, diff.baseTime - diff.minTime);
+                this.maxTime = diff.baseTime - timeReduction;
+                this.timeLeft = this.maxTime;
+
+                this.group = new THREE.Group();
+                type.buildModel(this.group, type);
+
+                this.group.position.copy(position);
+                this.group.lookAt(camera.position);
+
+                // Create 3D label above creature
                 this.createLabel();
-            }
 
-            createModel() {
-                const group = new THREE.Group();
-
-                // Body
-                const bodyGeom = new THREE.SphereGeometry(1, 16, 16);
-                const bodyMat = new THREE.MeshStandardMaterial({
-                    color: this.type.color,
-                    emissive: this.type.emissive,
-                    emissiveIntensity: 0.3,
-                    roughness: 0.7
-                });
-                const body = new THREE.Mesh(bodyGeom, bodyMat);
-                body.scale.setScalar(this.type.scale);
-                body.castShadow = true;
-                group.add(body);
-
-                // Eyes (glowing)
-                const eyeGeom = new THREE.SphereGeometry(0.15, 8, 8);
-                const eyeMat = new THREE.MeshBasicMaterial({ color: 0xff0000 });
-
-                const leftEye = new THREE.Mesh(eyeGeom, eyeMat);
-                leftEye.position.set(-0.3, 0.3, 0.8);
-                leftEye.scale.setScalar(this.type.scale);
-                group.add(leftEye);
-
-                const rightEye = new THREE.Mesh(eyeGeom, eyeMat);
-                rightEye.position.set(0.3, 0.3, 0.8);
-                rightEye.scale.setScalar(this.type.scale);
-                group.add(rightEye);
-
-                // Point light for eyes
-                const eyeLight = new THREE.PointLight(0xff0000, 0.5, 5);
-                eyeLight.position.set(0, 0.3, 0.9);
-                group.add(eyeLight);
-
-                // Type-specific features
-                this.addCreatureFeatures(group);
-
-                this.mesh = group;
-                scene.add(this.mesh);
-            }
-
-            addCreatureFeatures(group) {
-                const mat = new THREE.MeshStandardMaterial({
-                    color: this.type.color,
-                    emissive: this.type.emissive,
-                    emissiveIntensity: 0.2
-                });
-
-                switch(this.type.name) {
-                    case 'Werwolf':
-                        // Ears
-                        const earGeom = new THREE.ConeGeometry(0.2, 0.5, 4);
-                        const leftEar = new THREE.Mesh(earGeom, mat);
-                        leftEar.position.set(-0.5, 0.9, 0);
-                        leftEar.scale.setScalar(this.type.scale);
-                        group.add(leftEar);
-                        const rightEar = new THREE.Mesh(earGeom, mat);
-                        rightEar.position.set(0.5, 0.9, 0);
-                        rightEar.scale.setScalar(this.type.scale);
-                        group.add(rightEar);
-                        // Snout
-                        const snoutGeom = new THREE.ConeGeometry(0.3, 0.6, 8);
-                        const snout = new THREE.Mesh(snoutGeom, mat);
-                        snout.rotation.x = Math.PI / 2;
-                        snout.position.set(0, 0, 1);
-                        snout.scale.setScalar(this.type.scale);
-                        group.add(snout);
-                        break;
-
-                    case 'Greif':
-                        // Wings
-                        const wingGeom = new THREE.BoxGeometry(1.5, 0.1, 0.8);
-                        const leftWing = new THREE.Mesh(wingGeom, mat);
-                        leftWing.position.set(-1.2, 0.5, 0);
-                        leftWing.rotation.z = 0.3;
-                        leftWing.scale.setScalar(this.type.scale);
-                        group.add(leftWing);
-                        const rightWing = new THREE.Mesh(wingGeom, mat);
-                        rightWing.position.set(1.2, 0.5, 0);
-                        rightWing.rotation.z = -0.3;
-                        rightWing.scale.setScalar(this.type.scale);
-                        group.add(rightWing);
-                        // Beak
-                        const beakGeom = new THREE.ConeGeometry(0.2, 0.5, 4);
-                        const beak = new THREE.Mesh(beakGeom, new THREE.MeshStandardMaterial({ color: 0xFFA000 }));
-                        beak.rotation.x = Math.PI / 2;
-                        beak.position.set(0, 0, 1);
-                        beak.scale.setScalar(this.type.scale);
-                        group.add(beak);
-                        break;
-
-                    case 'Gnom':
-                        // Hat
-                        const hatGeom = new THREE.ConeGeometry(0.4, 0.8, 8);
-                        const hat = new THREE.Mesh(hatGeom, new THREE.MeshStandardMaterial({ color: 0xff0000 }));
-                        hat.position.set(0, 1, 0);
-                        hat.scale.setScalar(this.type.scale);
-                        group.add(hat);
-                        // Beard
-                        const beardGeom = new THREE.ConeGeometry(0.3, 0.5, 8);
-                        const beard = new THREE.Mesh(beardGeom, new THREE.MeshStandardMaterial({ color: 0xcccccc }));
-                        beard.position.set(0, -0.3, 0.7);
-                        beard.rotation.x = Math.PI;
-                        beard.scale.setScalar(this.type.scale);
-                        group.add(beard);
-                        break;
-
-                    case 'Drache':
-                        // Horns
-                        const hornGeom = new THREE.ConeGeometry(0.15, 0.6, 6);
-                        const leftHorn = new THREE.Mesh(hornGeom, new THREE.MeshStandardMaterial({ color: 0x333333 }));
-                        leftHorn.position.set(-0.4, 0.9, 0);
-                        leftHorn.rotation.z = -0.3;
-                        leftHorn.scale.setScalar(this.type.scale);
-                        group.add(leftHorn);
-                        const rightHorn = new THREE.Mesh(hornGeom, new THREE.MeshStandardMaterial({ color: 0x333333 }));
-                        rightHorn.position.set(0.4, 0.9, 0);
-                        rightHorn.rotation.z = 0.3;
-                        rightHorn.scale.setScalar(this.type.scale);
-                        group.add(rightHorn);
-                        // Wings
-                        const dragonWingGeom = new THREE.BoxGeometry(2, 0.1, 1);
-                        const dragonWingMat = new THREE.MeshStandardMaterial({ color: 0x8B0000 });
-                        const dLeftWing = new THREE.Mesh(dragonWingGeom, dragonWingMat);
-                        dLeftWing.position.set(-1.5, 0.3, -0.3);
-                        dLeftWing.rotation.z = 0.4;
-                        dLeftWing.scale.setScalar(this.type.scale);
-                        group.add(dLeftWing);
-                        const dRightWing = new THREE.Mesh(dragonWingGeom, dragonWingMat);
-                        dRightWing.position.set(1.5, 0.3, -0.3);
-                        dRightWing.rotation.z = -0.4;
-                        dRightWing.scale.setScalar(this.type.scale);
-                        group.add(dRightWing);
-                        // Fire glow
-                        const fireLight = new THREE.PointLight(0xff4400, 1, 8);
-                        fireLight.position.set(0, 0, 1.5);
-                        group.add(fireLight);
-                        break;
-
-                    case 'Troll':
-                        // Club
-                        const clubGeom = new THREE.CylinderGeometry(0.15, 0.25, 1.5, 8);
-                        const club = new THREE.Mesh(clubGeom, new THREE.MeshStandardMaterial({ color: 0x4a3728 }));
-                        club.position.set(1.2, -0.3, 0.5);
-                        club.rotation.z = 0.5;
-                        club.scale.setScalar(this.type.scale);
-                        group.add(club);
-                        // Nose
-                        const noseGeom = new THREE.SphereGeometry(0.25, 8, 8);
-                        const nose = new THREE.Mesh(noseGeom, mat);
-                        nose.position.set(0, 0, 0.9);
-                        nose.scale.setScalar(this.type.scale);
-                        group.add(nose);
-                        break;
-
-                    case 'Fee':
-                        // Wings (glowing)
-                        const feeWingMat = new THREE.MeshBasicMaterial({
-                            color: 0xff99ff,
-                            transparent: true,
-                            opacity: 0.7
-                        });
-                        const feeWingGeom = new THREE.CircleGeometry(0.6, 16);
-                        const fLeftWing = new THREE.Mesh(feeWingGeom, feeWingMat);
-                        fLeftWing.position.set(-0.6, 0.2, -0.2);
-                        fLeftWing.rotation.y = -0.5;
-                        fLeftWing.scale.setScalar(this.type.scale);
-                        group.add(fLeftWing);
-                        const fRightWing = new THREE.Mesh(feeWingGeom, feeWingMat);
-                        fRightWing.position.set(0.6, 0.2, -0.2);
-                        fRightWing.rotation.y = 0.5;
-                        fRightWing.scale.setScalar(this.type.scale);
-                        group.add(fRightWing);
-                        // Sparkle light
-                        const sparkleLight = new THREE.PointLight(0xff66ff, 1, 6);
-                        sparkleLight.position.set(0, 0, 0);
-                        group.add(sparkleLight);
-                        break;
-                }
+                scene.add(this.group);
+                this.animPhase = Math.random() * Math.PI * 2;
             }
 
             createLabel() {
                 const canvas = document.createElement('canvas');
-                const context = canvas.getContext('2d');
+                const ctx = canvas.getContext('2d');
                 canvas.width = 256;
-                canvas.height = 128;
+                canvas.height = 96;
 
                 // Background
-                context.fillStyle = 'rgba(40, 25, 15, 0.9)';
-                context.roundRect(0, 0, 256, 128, 15);
-                context.fill();
+                ctx.fillStyle = 'rgba(30, 15, 8, 0.9)';
+                ctx.beginPath();
+                ctx.roundRect(4, 4, 248, 88, 12);
+                ctx.fill();
 
                 // Border
-                context.strokeStyle = '#DAA520';
-                context.lineWidth = 4;
-                context.roundRect(0, 0, 256, 128, 15);
-                context.stroke();
-
-                // Creature name
-                context.font = 'bold 24px Arial';
-                context.fillStyle = '#FF6B6B';
-                context.textAlign = 'center';
-                context.fillText(this.type.name, 128, 40);
+                ctx.strokeStyle = '#DAA520';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.roundRect(4, 4, 248, 88, 12);
+                ctx.stroke();
 
                 // Question
-                context.font = 'bold 36px Arial';
-                context.fillStyle = '#7CFC00';
-                context.fillText(this.question + ' = ?', 128, 90);
+                ctx.font = 'bold 42px Arial';
+                ctx.fillStyle = '#7CFC00';
+                ctx.textAlign = 'center';
+                ctx.fillText(this.question + ' = ?', 128, 60);
 
                 const texture = new THREE.CanvasTexture(canvas);
-                const spriteMat = new THREE.SpriteMaterial({ map: texture });
+                const spriteMat = new THREE.SpriteMaterial({ map: texture, transparent: true });
                 this.label = new THREE.Sprite(spriteMat);
-                this.label.scale.set(4, 2, 1);
-                scene.add(this.label);
+                this.label.scale.set(3, 1.2, 1);
+                this.label.position.y = 3;
+                this.group.add(this.label);
             }
 
-            update() {
-                if (this.defeated) return;
+            update(delta) {
+                if (this.defeated) return false;
 
-                // Move toward player
-                this.mesh.position.z += this.speed;
+                this.animPhase += delta * 3;
+                this.group.position.y = Math.sin(this.animPhase) * 0.05;
 
-                // Wobble animation
-                this.wobblePhase += 0.05;
-                this.mesh.rotation.y = Math.sin(this.wobblePhase) * 0.2;
-                this.mesh.position.y = this.type.scale + Math.sin(this.wobblePhase * 2) * 0.1;
+                // Make label face camera
+                this.label.lookAt(camera.position);
 
-                // Update label position
-                this.label.position.copy(this.mesh.position);
-                this.label.position.y += this.type.scale + 1.5;
+                // Update time
+                this.timeLeft -= delta * 1000;
 
-                // Check if reached player
-                if (this.mesh.position.z > -2) {
-                    return true; // Creature reached player
+                if (this.timeLeft <= 0) {
+                    return true; // Time expired
                 }
+
                 return false;
             }
 
             defeat() {
                 this.defeated = true;
-
-                // Create explosion particles
-                const pos = this.mesh.position.clone();
-                for (let i = 0; i < 20; i++) {
-                    createParticle(pos, this.type.color);
+                for (let i = 0; i < 25; i++) {
+                    createExplosionParticle(this.group.position.clone(), this.type.color);
                 }
-
-                // Remove from scene
-                scene.remove(this.mesh);
-                scene.remove(this.label);
+                scene.remove(this.group);
             }
 
-            destroy() {
-                scene.remove(this.mesh);
-                scene.remove(this.label);
+            remove() {
+                scene.remove(this.group);
+            }
+
+            getTimePercent() {
+                return (this.timeLeft / this.maxTime) * 100;
             }
         }
 
-        // Particle system
-        function createParticle(position, color) {
-            const geom = new THREE.SphereGeometry(0.15, 8, 8);
+        function createExplosionParticle(position, color) {
+            const geom = new THREE.SphereGeometry(0.1 + Math.random() * 0.1, 6, 6);
             const mat = new THREE.MeshBasicMaterial({ color: color });
             const particle = new THREE.Mesh(geom, mat);
             particle.position.copy(position);
+            particle.position.y += 1;
             particle.velocity = new THREE.Vector3(
-                (Math.random() - 0.5) * 0.3,
-                Math.random() * 0.3,
-                (Math.random() - 0.5) * 0.3
+                (Math.random() - 0.5) * 0.4,
+                Math.random() * 0.3 + 0.1,
+                (Math.random() - 0.5) * 0.4
             );
             particle.life = 1;
             scene.add(particle);
             particles.push(particle);
         }
 
-        function updateParticles() {
-            for (let i = particles.length - 1; i >= 0; i--) {
-                const p = particles[i];
-                p.position.add(p.velocity);
-                p.velocity.y -= 0.01; // Gravity
-                p.life -= 0.02;
-                p.scale.setScalar(p.life);
+        // ==================== ENCOUNTER SYSTEM (RAIL-SHOOTER) ====================
+        function scheduleNextEncounter() {
+            const diff = difficulties[gameState.difficulty];
+            // Highly variable distance until next encounter for surprise effect
+            const minDist = Math.max(3, diff.minDistance - gameState.chapter * 0.5);
+            const maxDist = Math.max(8, diff.maxDistance - gameState.chapter);
+            const randomDistance = minDist + Math.random() * (maxDist - minDist);
 
-                if (p.life <= 0) {
-                    scene.remove(p);
-                    particles.splice(i, 1);
-                }
+            // Add extra randomness: sometimes very quick, sometimes longer wait
+            const surpriseFactor = Math.random();
+            let finalDistance = randomDistance;
+            if (surpriseFactor < 0.15) {
+                // 15% chance: very quick encounter
+                finalDistance = minDist * 0.5;
+            } else if (surpriseFactor > 0.9) {
+                // 10% chance: longer wait
+                finalDistance = maxDist * 1.3;
+            }
+
+            gameState.nextEncounterDistance = gameState.distanceTraveled + finalDistance;
+        }
+
+        function checkForEncounter() {
+            if (!gameState.isPlaying || gameState.isInEncounter) return;
+
+            if (gameState.distanceTraveled >= gameState.nextEncounterDistance) {
+                triggerEncounter();
             }
         }
 
-        // Game Functions
-        function spawnCreature() {
-            if (!gameState.isPlaying) return;
+        function getEncounterDirection() {
+            // Weight the directions: front most common, behind rarest
+            const rand = Math.random();
+            if (rand < 0.35) return 'front';
+            if (rand < 0.55) return 'left';
+            if (rand < 0.75) return 'right';
+            if (rand < 0.92) return 'above';
+            return 'behind'; // 8% chance
+        }
 
-            const creature = new Creature(gameState.level, gameState.difficulty);
-            creatures.push(creature);
-            gameState.waveCreatures++;
+        function showDirectionIndicator(direction) {
+            const indicator = document.getElementById('directionIndicator');
+            const arrows = {
+                'front': '⬆',
+                'left': '⬅',
+                'right': '➡',
+                'above': '⬆',
+                'behind': '⬇'
+            };
+            const labels = {
+                'front': 'VORNE!',
+                'left': 'LINKS!',
+                'right': 'RECHTS!',
+                'above': 'OBEN!',
+                'behind': 'HINTEN!'
+            };
+            indicator.textContent = labels[direction];
+            indicator.classList.remove('show');
+            void indicator.offsetWidth; // Force reflow
+            indicator.classList.add('show');
+        }
+
+        function triggerEncounter() {
+            gameState.isInEncounter = true;
+            gameState.cameraMoving = false;
+
+            playSound('spawn');
+
+            // Determine direction
+            const direction = getEncounterDirection();
+            showDirectionIndicator(direction);
+
+            // Determine how many creatures to spawn
+            const numCreatures = Math.min(gameState.maxActiveCreatures, 1 + Math.floor(gameState.chapter / 3));
+
+            // Get camera vectors
+            const lookDir = new THREE.Vector3();
+            camera.getWorldDirection(lookDir);
+            const right = new THREE.Vector3();
+            right.crossVectors(lookDir, new THREE.Vector3(0, 1, 0)).normalize();
+            const up = new THREE.Vector3(0, 1, 0);
+
+            // Spawn creatures based on direction
+            for (let i = 0; i < numCreatures; i++) {
+                const problem = getNextProblem();
+                const typeIndex = Math.floor(Math.random() * Math.min(creatureTypes.length, 2 + Math.floor(gameState.chapter / 2)));
+                const type = creatureTypes[typeIndex];
+
+                const spawnPos = camera.position.clone();
+                const spreadOffset = (i - (numCreatures - 1) / 2) * 3;
+
+                switch(direction) {
+                    case 'front':
+                        spawnPos.add(lookDir.clone().multiplyScalar(8 + Math.random() * 3));
+                        spawnPos.add(right.clone().multiplyScalar(spreadOffset));
+                        break;
+                    case 'left':
+                        spawnPos.add(right.clone().multiplyScalar(-8 - Math.random() * 2));
+                        spawnPos.add(lookDir.clone().multiplyScalar(2 + spreadOffset));
+                        break;
+                    case 'right':
+                        spawnPos.add(right.clone().multiplyScalar(8 + Math.random() * 2));
+                        spawnPos.add(lookDir.clone().multiplyScalar(2 + spreadOffset));
+                        break;
+                    case 'above':
+                        spawnPos.add(lookDir.clone().multiplyScalar(6 + Math.random() * 2));
+                        spawnPos.add(right.clone().multiplyScalar(spreadOffset));
+                        spawnPos.y += 4 + Math.random() * 2; // Higher up
+                        break;
+                    case 'behind':
+                        spawnPos.add(lookDir.clone().multiplyScalar(-6 - Math.random() * 2));
+                        spawnPos.add(right.clone().multiplyScalar(spreadOffset));
+                        break;
+                }
+
+                // Ground level for most, except flying creatures from above
+                if (direction !== 'above') {
+                    spawnPos.y = 0;
+                }
+
+                const creature = new Creature(spawnPos, type, problem.num1, problem.num2);
+                activeCreatures.push(creature);
+            }
+
+            updateCreatureDisplay();
             updateCreatureCount();
+
+            // Animate camera to look at center of creatures
+            if (activeCreatures.length > 0) {
+                const centerPos = new THREE.Vector3();
+                activeCreatures.forEach(c => centerPos.add(c.group.position));
+                centerPos.divideScalar(activeCreatures.length);
+                if (direction !== 'above') {
+                    centerPos.y = 1.5;
+                }
+                animateCameraLook(centerPos);
+            }
+        }
+
+        function animateCameraLook(target) {
+            const startQuat = camera.quaternion.clone();
+            const tempCam = camera.clone();
+            tempCam.lookAt(target);
+            const endQuat = tempCam.quaternion.clone();
+
+            let progress = 0;
+            const animateLook = () => {
+                if (!gameState.isPlaying) return;
+
+                progress += 0.05;
+                if (progress >= 1) {
+                    camera.quaternion.copy(endQuat);
+                    return;
+                }
+                camera.quaternion.slerpQuaternions(startQuat, endQuat, easeOutCubic(progress));
+                requestAnimationFrame(animateLook);
+            };
+            animateLook();
+        }
+
+        function easeOutCubic(t) {
+            return 1 - Math.pow(1 - t, 3);
+        }
+
+        function endEncounter() {
+            gameState.isInEncounter = false;
+            gameState.cameraMoving = true;
+            scheduleNextEncounter();
+
+            // Brief pause before camera moves again
+            setTimeout(() => {
+                if (gameState.isPlaying && !gameState.isInEncounter) {
+                    // Smoothly look back to path direction
+                    if (pathPoints.length > 0) {
+                        const lookAheadIndex = Math.min(currentPathIndex + 5, pathPoints.length - 1);
+                        const lookTarget = pathPoints[lookAheadIndex].clone();
+                        lookTarget.y = 1.5;
+                        animateCameraLook(lookTarget);
+                    }
+                }
+            }, 500);
+        }
+
+        function updateCreatureDisplay() {
+            const container = document.getElementById('activeCreatures');
+            container.innerHTML = activeCreatures.map(c => `
+                <div class="creature-card" data-id="${c.id}">
+                    <div class="name">${c.type.name}</div>
+                    <div class="question">${c.question}</div>
+                    <div class="timer">
+                        <div class="timer-fill ${c.getTimePercent() < 30 ? 'danger' : ''}"
+                             style="width: ${c.getTimePercent()}%"></div>
+                    </div>
+                </div>
+            `).join('');
         }
 
         function updateCreatureCount() {
-            document.getElementById('creatureNum').textContent = creatures.length;
+            document.getElementById('creatureNum').textContent = activeCreatures.length;
         }
 
+        // ==================== GAME LOGIC ====================
         function processAnswer(answer) {
-            if (!gameState.isPlaying || creatures.length === 0) return;
+            if (!gameState.isPlaying || activeCreatures.length === 0) return;
 
-            let found = false;
-            // Find the closest creature with matching answer
-            let closestIndex = -1;
-            let closestZ = -Infinity;
+            // Find creature with matching answer (closest first by time)
+            let matchIndex = -1;
+            let lowestTime = Infinity;
 
-            for (let i = 0; i < creatures.length; i++) {
-                const c = creatures[i];
-                if (!c.defeated && c.answer === answer && c.mesh.position.z > closestZ) {
-                    closestZ = c.mesh.position.z;
-                    closestIndex = i;
+            for (let i = 0; i < activeCreatures.length; i++) {
+                const c = activeCreatures[i];
+                if (c.answer === answer && c.timeLeft < lowestTime) {
+                    matchIndex = i;
+                    lowestTime = c.timeLeft;
                 }
             }
 
-            if (closestIndex >= 0) {
-                const creature = creatures[closestIndex];
+            if (matchIndex >= 0) {
+                const creature = activeCreatures[matchIndex];
                 creature.defeat();
 
+                // Score
+                const timeBonus = Math.floor((creature.timeLeft / creature.maxTime) * 15);
                 gameState.combo++;
-                const comboBonus = Math.floor(gameState.combo / 3);
-                const points = creature.type.points * gameState.level + comboBonus * 5;
+                const comboBonus = Math.floor(gameState.combo / 3) * 5;
+                const points = creature.type.points * gameState.chapter + timeBonus + comboBonus;
                 gameState.score += points;
-                gameState.creaturesDefeated++;
 
-                // Show target info briefly
-                showTargetInfo(creature.type.name, creature.question);
+                gameState.totalDefeated++;
+                gameState.chapterDefeated++;
+
+                activeCreatures.splice(matchIndex, 1);
 
                 updateUI();
                 updateCombo();
+                updateCreatureDisplay();
+                updateCreatureCount();
                 showFeedback('TREFFER!', 'correct');
                 playSound('correct');
 
-                creatures.splice(closestIndex, 1);
-                updateCreatureCount();
-
-                // Level up check
-                if (gameState.creaturesDefeated > 0 && gameState.creaturesDefeated % 10 === 0) {
-                    gameState.level++;
-                    gameState.wave++;
-                    playSound('levelup');
-                    updateUI();
+                // Check if encounter is over (all creatures defeated)
+                if (activeCreatures.length === 0 && gameState.isInEncounter) {
+                    endEncounter();
                 }
 
-                found = true;
-            }
-
-            if (!found) {
+                // Chapter advancement
+                if (gameState.chapterDefeated >= 8 + gameState.chapter * 3) {
+                    advanceChapter();
+                }
+            } else {
                 showFeedback('DANEBEN!', 'wrong');
                 playSound('wrong');
                 gameState.combo = 0;
@@ -1101,27 +1638,41 @@
             }
         }
 
-        function showTargetInfo(name, question) {
-            const info = document.getElementById('targetInfo');
-            document.getElementById('targetName').textContent = name;
-            document.getElementById('targetQuestion').textContent = question + ' = ' + eval(question.replace('x', '*'));
-            info.style.display = 'block';
-            setTimeout(() => {
-                info.style.display = 'none';
-            }, 1500);
+        function creatureExpired(creature) {
+            creature.remove();
+            const idx = activeCreatures.indexOf(creature);
+            if (idx >= 0) activeCreatures.splice(idx, 1);
+
+            loseLife();
+            showFeedback('ZEIT!', 'wrong');
+            gameState.combo = 0;
+            updateCombo();
+            updateCreatureDisplay();
+            updateCreatureCount();
+
+            // Check if encounter is over (all creatures gone)
+            if (activeCreatures.length === 0 && gameState.isInEncounter) {
+                endEncounter();
+            }
+        }
+
+        function advanceChapter() {
+            gameState.chapter++;
+            gameState.chapterDefeated = 0;
+
+            // Increase max active creatures
+            gameState.maxActiveCreatures = Math.min(1 + Math.floor(gameState.chapter / 2), 4);
+
+            playSound('chapter');
+            announceChapter();
+            updateUI();
         }
 
         function loseLife() {
             gameState.lives--;
-            gameState.combo = 0;
-            updateCombo();
-            playSound('damage');
-
-            // Damage overlay
             const overlay = document.getElementById('damageOverlay');
             overlay.classList.add('active');
-            setTimeout(() => overlay.classList.remove('active'), 300);
-
+            setTimeout(() => overlay.classList.remove('active'), 400);
             updateUI();
 
             if (gameState.lives <= 0) {
@@ -1131,21 +1682,19 @@
 
         function updateUI() {
             document.getElementById('score').textContent = gameState.score;
-            document.getElementById('level').textContent = gameState.level;
-            document.getElementById('wave').textContent = gameState.wave;
+            document.getElementById('chapter').textContent = gameState.chapter;
             document.getElementById('highscore').textContent = gameState.highscore;
+            document.getElementById('lives').innerHTML = Array(gameState.lives).fill('<span class="heart">❤</span>').join('');
 
-            const livesEl = document.getElementById('lives');
-            livesEl.innerHTML = '';
-            for (let i = 0; i < gameState.lives; i++) {
-                livesEl.innerHTML += '<span class="heart">&#10084;</span>';
-            }
+            // Update chapter progress bar
+            const creaturesNeeded = 8 + gameState.chapter * 3;
+            const progressPercent = Math.min(100, (gameState.chapterDefeated / creaturesNeeded) * 100);
+            document.getElementById('chapterProgressFill').style.width = progressPercent + '%';
         }
 
         function updateCombo() {
-            const comboEl = document.getElementById('combo');
+            const comboEl = document.getElementById('comboDisplay');
             const countEl = document.getElementById('comboCount');
-
             if (gameState.combo >= 3) {
                 countEl.textContent = gameState.combo;
                 comboEl.classList.add('visible');
@@ -1158,60 +1707,63 @@
             const feedback = document.getElementById('feedback');
             feedback.textContent = text;
             feedback.className = type;
-            setTimeout(() => {
-                feedback.className = '';
-            }, 1000);
+            setTimeout(() => feedback.className = '', 800);
+        }
+
+        function announceChapter() {
+            const announce = document.getElementById('chapterAnnounce');
+            announce.textContent = `Kapitel ${gameState.chapter} - Bis zu ${gameState.maxActiveCreatures} Kreaturen!`;
+            announce.classList.add('visible');
+            setTimeout(() => announce.classList.remove('visible'), 3000);
         }
 
         function handleSubmit() {
             const input = document.getElementById('answerInput');
             const value = parseInt(input.value);
-
             if (!isNaN(value)) {
                 processAnswer(value);
                 input.value = '';
-                input.focus();
             }
         }
 
         function startGame() {
+            updateSelectedRows();
+            initProblemPool();
             init3D();
 
             document.getElementById('startScreen').style.display = 'none';
+
             gameState.isPlaying = true;
             gameState.score = 0;
             gameState.lives = 5;
-            gameState.level = 1;
-            gameState.wave = 1;
+            gameState.chapter = 1;
             gameState.combo = 0;
-            gameState.creaturesDefeated = 0;
-            gameState.waveCreatures = 0;
-            creatures = [];
-            particles = [];
+            gameState.totalDefeated = 0;
+            gameState.chapterDefeated = 0;
+            gameState.cameraMoving = true;
+            gameState.isInEncounter = false;
+            gameState.maxActiveCreatures = 1;
+            gameState.distanceTraveled = 0;
+            currentPathIndex = 0;
+            pathProgress = 0;
+            activeCreatures = [];
 
             updateUI();
             updateCombo();
-            updateCreatureCount();
+            announceChapter();
 
             document.getElementById('answerInput').focus();
 
-            // Start spawn timer
-            const diffConfig = difficulties[gameState.difficulty];
-            gameState.spawnTimer = setInterval(() => {
-                if (gameState.isPlaying && creatures.length < 6 + gameState.level) {
-                    spawnCreature();
-                }
-            }, diffConfig.spawnRate - gameState.level * 100);
+            // Schedule first encounter
+            scheduleNextEncounter();
 
-            // Start game loop
+            lastTime = performance.now();
             animate();
         }
 
         function gameOver() {
             gameState.isPlaying = false;
-            clearInterval(gameState.spawnTimer);
 
-            // Check highscore
             if (gameState.score > gameState.highscore) {
                 gameState.highscore = gameState.score;
                 localStorage.setItem('mathGame3DHighscore', gameState.score);
@@ -1219,41 +1771,100 @@
             }
 
             document.getElementById('finalScore').textContent = gameState.score;
-            document.getElementById('finalLevel').textContent = gameState.level;
+            document.getElementById('finalChapter').textContent = gameState.chapter;
             document.getElementById('displayHighscore').textContent = gameState.highscore;
             document.getElementById('gameOverScreen').style.display = 'flex';
         }
 
-        function animate() {
+        // ==================== ANIMATION LOOP ====================
+        let lastTime = 0;
+
+        function animate(currentTime = 0) {
             if (!gameState.isPlaying) return;
 
             requestAnimationFrame(animate);
 
-            // Update creatures
-            for (let i = creatures.length - 1; i >= 0; i--) {
-                const creature = creatures[i];
-                const reachedPlayer = creature.update();
+            const delta = (currentTime - lastTime) / 1000;
+            lastTime = currentTime;
 
-                if (reachedPlayer) {
-                    creature.destroy();
-                    creatures.splice(i, 1);
-                    loseLife();
-                    updateCreatureCount();
+            // Camera movement (Rail-shooter style) - speed from difficulty settings
+            if (gameState.cameraMoving && pathPoints.length > 0 && !gameState.isInEncounter) {
+                const diff = difficulties[gameState.difficulty];
+                const moveSpeed = delta * diff.cameraSpeed;
+                pathProgress += moveSpeed;
+
+                // Track distance for encounter triggering
+                gameState.distanceTraveled += moveSpeed * 5;
+
+                if (pathProgress >= 1) {
+                    pathProgress = 0;
+                    currentPathIndex++;
+                    if (currentPathIndex >= pathPoints.length - 1) currentPathIndex = 0;
+                }
+
+                const currentPoint = pathPoints[currentPathIndex];
+                const nextPoint = pathPoints[Math.min(currentPathIndex + 1, pathPoints.length - 1)];
+                camera.position.lerpVectors(currentPoint, nextPoint, pathProgress);
+
+                // Only auto-look ahead when not in encounter transition
+                if (!gameState.isInEncounter) {
+                    const lookAheadIndex = Math.min(currentPathIndex + 3, pathPoints.length - 1);
+                    const lookTarget = pathPoints[lookAheadIndex].clone();
+                    lookTarget.y = 1.5;
+
+                    const tempCam = camera.clone();
+                    tempCam.lookAt(lookTarget);
+                    camera.quaternion.slerp(tempCam.quaternion, 0.03);
+                }
+
+                // Check for encounter
+                checkForEncounter();
+            }
+
+            // Update creatures
+            for (let i = activeCreatures.length - 1; i >= 0; i--) {
+                const creature = activeCreatures[i];
+                const expired = creature.update(delta);
+                if (expired) {
+                    creatureExpired(creature);
                 }
             }
 
-            // Update particles
-            updateParticles();
+            // Update creature display (timers)
+            if (activeCreatures.length > 0) {
+                updateCreatureDisplay();
+            }
 
-            // Flicker torch lights
-            pointLights.forEach((light, i) => {
-                light.intensity = 0.6 + Math.sin(Date.now() * 0.01 + i) * 0.2;
+            // Update particles
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                p.position.add(p.velocity);
+                p.velocity.y -= 0.015;
+                p.life -= 0.02;
+                p.scale.setScalar(p.life);
+                if (p.life <= 0) {
+                    scene.remove(p);
+                    particles.splice(i, 1);
+                }
+            }
+
+            // Flicker torches
+            environmentObjects.forEach(obj => {
+                if (obj.userData.light) {
+                    obj.userData.light.intensity = 1.3 + Math.sin(currentTime * 0.01 + obj.position.x) * 0.4;
+                }
             });
 
             renderer.render(scene, camera);
         }
 
-        // Event Listeners
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        // ==================== EVENT LISTENERS ====================
         document.querySelectorAll('.difficulty-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 document.querySelectorAll('.difficulty-btn').forEach(b => b.classList.remove('active'));
@@ -1262,15 +1873,18 @@
             });
         });
 
-        document.getElementById('submitButton').addEventListener('click', handleSubmit);
-
-        document.getElementById('answerInput').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                handleSubmit();
-            }
+        document.querySelectorAll('.row-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                btn.classList.toggle('active');
+                updateSelectedRows();
+            });
         });
 
-        // Initial highscore display
+        document.getElementById('submitButton').addEventListener('click', handleSubmit);
+        document.getElementById('answerInput').addEventListener('keypress', e => {
+            if (e.key === 'Enter') handleSubmit();
+        });
+
         document.getElementById('highscore').textContent = gameState.highscore;
     </script>
 </body>
