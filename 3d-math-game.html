@@ -698,6 +698,18 @@
 
             #answerInput {
                 width: 100px;
+                /* Prevent zoom on focus */
+                font-size: 16px;
+            }
+
+            /* Hide submit button on mobile - use numpad OK */
+            #submitButton {
+                display: none;
+            }
+
+            /* Move creature cards higher on mobile */
+            #activeCreatures {
+                bottom: 130px;
             }
         }
     </style>
@@ -741,7 +753,7 @@
     <div id="activeCreatures"></div>
 
     <div id="inputContainer">
-        <input type="number" id="answerInput" placeholder="?" autocomplete="off">
+        <input type="text" id="answerInput" inputmode="numeric" pattern="[0-9]*" placeholder="?" autocomplete="off">
         <button id="submitButton">FEUER</button>
     </div>
 
@@ -2159,6 +2171,24 @@
             if (e.key === 'Enter') handleSubmit();
         });
 
+        // Mobile detection and setup
+        function isMobileDevice() {
+            return (window.matchMedia('(pointer: coarse)').matches ||
+                    window.innerWidth <= 768 ||
+                    'ontouchstart' in window);
+        }
+
+        // On mobile: make input readonly to prevent native keyboard
+        const answerInput = document.getElementById('answerInput');
+        if (isMobileDevice()) {
+            answerInput.setAttribute('readonly', 'readonly');
+            answerInput.setAttribute('inputmode', 'none');
+            // Prevent focus from triggering keyboard
+            answerInput.addEventListener('focus', (e) => {
+                e.target.blur();
+            });
+        }
+
         // Mobile numpad event listeners
         document.querySelectorAll('.numpad-btn').forEach(btn => {
             btn.addEventListener('click', () => {
@@ -2167,13 +2197,15 @@
                 const action = btn.dataset.action;
 
                 if (num !== undefined) {
-                    input.value += num;
+                    // Limit to reasonable number length
+                    if (input.value.length < 4) {
+                        input.value += num;
+                    }
                 } else if (action === 'clear') {
                     input.value = '';
                 } else if (action === 'submit') {
                     handleSubmit();
                 }
-                input.focus();
             });
         });
 
