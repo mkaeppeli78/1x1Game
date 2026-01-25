@@ -401,7 +401,7 @@
         /* Active creatures display at bottom */
         #activeCreatures {
             position: absolute;
-            bottom: 80px;
+            bottom: 110px;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
@@ -529,6 +529,177 @@
             30% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
             100% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
         }
+
+        /* Mobile numpad */
+        #mobileNumpad {
+            display: none;
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            z-index: 15;
+        }
+
+        .numpad-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+            background: linear-gradient(145deg, rgba(40, 25, 15, 0.95), rgba(25, 15, 8, 0.95));
+            padding: 10px;
+            border-radius: 12px;
+            border: 2px solid #8B4513;
+        }
+
+        .numpad-btn {
+            width: 50px;
+            height: 50px;
+            font-size: 22px;
+            font-weight: bold;
+            border: 2px solid #8B4513;
+            border-radius: 8px;
+            background: linear-gradient(145deg, rgba(80, 50, 30, 0.9), rgba(60, 35, 20, 0.9));
+            color: #FFD700;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .numpad-btn:active {
+            transform: scale(0.95);
+            background: linear-gradient(145deg, #DAA520, #B8860B);
+        }
+
+        .numpad-btn.action {
+            background: linear-gradient(145deg, #8B4513, #654321);
+        }
+
+        .numpad-btn.action.submit {
+            background: linear-gradient(145deg, #228B22, #1a6b1a);
+            color: #7CFC00;
+        }
+
+        /* Chapter summary overlay */
+        #chapterSummary {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(5, 2, 8, 0.95);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 200;
+        }
+
+        #chapterSummary.visible {
+            display: flex;
+        }
+
+        .summary-panel {
+            background: linear-gradient(135deg, rgba(50, 30, 15, 0.95), rgba(30, 18, 8, 0.95));
+            padding: 30px 40px;
+            border-radius: 15px;
+            border: 3px solid #8B4513;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.8);
+            max-width: 500px;
+            text-align: center;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .summary-panel h2 {
+            font-size: 32px;
+            color: #FFD700;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+        }
+
+        .summary-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+            color: #c9a86c;
+            font-size: 18px;
+        }
+
+        .summary-stats span {
+            color: #7CFC00;
+            font-weight: bold;
+        }
+
+        .wrong-problems {
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .wrong-problems h3 {
+            color: #FF6B6B;
+            margin-bottom: 12px;
+            font-size: 18px;
+        }
+
+        .wrong-problem-item {
+            background: rgba(255, 100, 100, 0.15);
+            border: 1px solid #FF6B6B;
+            border-radius: 8px;
+            padding: 10px 15px;
+            margin: 8px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #c9a86c;
+        }
+
+        .wrong-problem-item .problem {
+            font-size: 20px;
+            color: #FFD700;
+        }
+
+        .wrong-problem-item .answer {
+            font-size: 20px;
+            color: #7CFC00;
+            font-weight: bold;
+        }
+
+        .no-mistakes {
+            color: #7CFC00;
+            font-size: 18px;
+            padding: 20px;
+        }
+
+        .continue-btn {
+            margin-top: 20px;
+            padding: 14px 35px;
+            font-size: 18px;
+            background: linear-gradient(145deg, #8B4513, #654321);
+            border: 2px solid #DAA520;
+            border-radius: 10px;
+            color: #FFD700;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .continue-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(218, 165, 32, 0.5);
+        }
+
+        /* Show numpad only on touch devices / mobile */
+        @media (pointer: coarse), (max-width: 768px) {
+            #mobileNumpad {
+                display: block;
+            }
+
+            #inputContainer {
+                left: 20px;
+                transform: none;
+            }
+
+            #answerInput {
+                width: 100px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -576,6 +747,38 @@
 
     <div id="feedback"></div>
     <div id="damageOverlay"></div>
+
+    <!-- Mobile Numpad -->
+    <div id="mobileNumpad">
+        <div class="numpad-grid">
+            <button class="numpad-btn" data-num="1">1</button>
+            <button class="numpad-btn" data-num="2">2</button>
+            <button class="numpad-btn" data-num="3">3</button>
+            <button class="numpad-btn" data-num="4">4</button>
+            <button class="numpad-btn" data-num="5">5</button>
+            <button class="numpad-btn" data-num="6">6</button>
+            <button class="numpad-btn" data-num="7">7</button>
+            <button class="numpad-btn" data-num="8">8</button>
+            <button class="numpad-btn" data-num="9">9</button>
+            <button class="numpad-btn action" data-action="clear">C</button>
+            <button class="numpad-btn" data-num="0">0</button>
+            <button class="numpad-btn action submit" data-action="submit">OK</button>
+        </div>
+    </div>
+
+    <!-- Chapter Summary -->
+    <div id="chapterSummary">
+        <div class="summary-panel">
+            <h2 id="summaryTitle">Kapitel abgeschlossen!</h2>
+            <div class="summary-stats">
+                <div>Richtig: <span id="summaryCorrect">0</span></div>
+                <div>Falsch: <span id="summaryWrong">0</span></div>
+            </div>
+            <div class="wrong-problems" id="wrongProblemsList">
+            </div>
+            <button class="continue-btn" onclick="continueToNextChapter()">Weiter</button>
+        </div>
+    </div>
 
     <div id="startScreen">
         <div class="screen-panel">
@@ -728,11 +931,14 @@
             isInEncounter: false,
             totalDefeated: 0,
             chapterDefeated: 0,
+            chapterCorrect: 0,
             selectedRows: [2, 3, 4, 5, 6, 7, 8, 9, 10],
             maxActiveCreatures: 1,
             encounterScheduleTimer: null,
             nextEncounterDistance: 0,
-            distanceTraveled: 0
+            distanceTraveled: 0,
+            wrongAnswers: [], // Track wrong answers for chapter summary
+            isPaused: false
         };
 
         const difficulties = {
@@ -891,8 +1097,9 @@
 
             pathPoints.forEach((point, i) => {
                 if (i % 3 === 0) {
-                    createTree(point.x - 6 - Math.random() * 4, point.z + (Math.random() - 0.5) * 4);
-                    createTree(point.x + 6 + Math.random() * 4, point.z + (Math.random() - 0.5) * 4);
+                    // Trees further from path to avoid blocking labels
+                    createTree(point.x - 10 - Math.random() * 5, point.z + (Math.random() - 0.5) * 4);
+                    createTree(point.x + 10 + Math.random() * 5, point.z + (Math.random() - 0.5) * 4);
                 }
                 if (i % 5 === 0) {
                     createTorch(point.x - 3, point.z);
@@ -1611,6 +1818,7 @@
 
                 gameState.totalDefeated++;
                 gameState.chapterDefeated++;
+                gameState.chapterCorrect++;
 
                 activeCreatures.splice(matchIndex, 1);
 
@@ -1639,6 +1847,13 @@
         }
 
         function creatureExpired(creature) {
+            // Track as wrong answer (time expired)
+            gameState.wrongAnswers.push({
+                question: creature.question,
+                answer: creature.answer,
+                reason: 'Zeit abgelaufen'
+            });
+
             creature.remove();
             const idx = activeCreatures.indexOf(creature);
             if (idx >= 0) activeCreatures.splice(idx, 1);
@@ -1657,8 +1872,51 @@
         }
 
         function advanceChapter() {
+            // Show chapter summary before advancing
+            showChapterSummary();
+        }
+
+        function showChapterSummary() {
+            gameState.isPaused = true;
+
+            const summary = document.getElementById('chapterSummary');
+            const title = document.getElementById('summaryTitle');
+            const correctEl = document.getElementById('summaryCorrect');
+            const wrongEl = document.getElementById('summaryWrong');
+            const problemsList = document.getElementById('wrongProblemsList');
+
+            title.textContent = `Kapitel ${gameState.chapter} abgeschlossen!`;
+            correctEl.textContent = gameState.chapterCorrect;
+            wrongEl.textContent = gameState.wrongAnswers.length;
+
+            // Build wrong problems list
+            if (gameState.wrongAnswers.length > 0) {
+                problemsList.innerHTML = `
+                    <h3>Zum Ueben:</h3>
+                    ${gameState.wrongAnswers.map(w => `
+                        <div class="wrong-problem-item">
+                            <span class="problem">${w.question}</span>
+                            <span class="answer">= ${w.answer}</span>
+                        </div>
+                    `).join('')}
+                `;
+            } else {
+                problemsList.innerHTML = '<div class="no-mistakes">Keine Fehler! Perfekt!</div>';
+            }
+
+            summary.classList.add('visible');
+        }
+
+        function continueToNextChapter() {
+            const summary = document.getElementById('chapterSummary');
+            summary.classList.remove('visible');
+
+            // Now actually advance
             gameState.chapter++;
             gameState.chapterDefeated = 0;
+            gameState.chapterCorrect = 0;
+            gameState.wrongAnswers = [];
+            gameState.isPaused = false;
 
             // Increase max active creatures
             gameState.maxActiveCreatures = Math.min(1 + Math.floor(gameState.chapter / 2), 4);
@@ -1666,6 +1924,13 @@
             playSound('chapter');
             announceChapter();
             updateUI();
+
+            // Resume camera movement
+            if (!gameState.isInEncounter) {
+                gameState.cameraMoving = true;
+            }
+
+            document.getElementById('answerInput').focus();
         }
 
         function loseLife() {
@@ -1740,10 +2005,13 @@
             gameState.combo = 0;
             gameState.totalDefeated = 0;
             gameState.chapterDefeated = 0;
+            gameState.chapterCorrect = 0;
             gameState.cameraMoving = true;
             gameState.isInEncounter = false;
             gameState.maxActiveCreatures = 1;
             gameState.distanceTraveled = 0;
+            gameState.wrongAnswers = [];
+            gameState.isPaused = false;
             currentPathIndex = 0;
             pathProgress = 0;
             activeCreatures = [];
@@ -1783,6 +2051,12 @@
             if (!gameState.isPlaying) return;
 
             requestAnimationFrame(animate);
+
+            // Skip updates if paused (chapter summary showing)
+            if (gameState.isPaused) {
+                renderer.render(scene, camera);
+                return;
+            }
 
             const delta = (currentTime - lastTime) / 1000;
             lastTime = currentTime;
@@ -1883,6 +2157,24 @@
         document.getElementById('submitButton').addEventListener('click', handleSubmit);
         document.getElementById('answerInput').addEventListener('keypress', e => {
             if (e.key === 'Enter') handleSubmit();
+        });
+
+        // Mobile numpad event listeners
+        document.querySelectorAll('.numpad-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const input = document.getElementById('answerInput');
+                const num = btn.dataset.num;
+                const action = btn.dataset.action;
+
+                if (num !== undefined) {
+                    input.value += num;
+                } else if (action === 'clear') {
+                    input.value = '';
+                } else if (action === 'submit') {
+                    handleSubmit();
+                }
+                input.focus();
+            });
         });
 
         document.getElementById('highscore').textContent = gameState.highscore;
